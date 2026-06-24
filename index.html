@@ -381,6 +381,13 @@ footer .slo{color:var(--violet-glow);font-family:'Barlow Condensed';font-weight:
 @keyframes nameGlow{0%,100%{transform:scale(1) translateY(0);text-shadow:0 0 16px rgba(192,132,252,.7)}50%{transform:scale(1.07) translateY(-3px);text-shadow:0 0 34px rgba(0,212,170,.95)}}
 .celebrate{animation:celebratePop 1.15s cubic-bezier(.18,.9,.2,1)}
 @keyframes celebratePop{0%{transform:scale(.9)}28%{transform:scale(1.05) rotate(.8deg)}45%{transform:scale(1.0) rotate(-.8deg)}62%{transform:scale(1.02) rotate(.5deg)}78%{transform:scale(1) rotate(-.35deg)}100%{transform:scale(1) rotate(0)}}
+.faq{background:var(--black2);border:1px solid var(--border);border-radius:12px;margin-bottom:9px;overflow:hidden}
+.faq>summary{cursor:pointer;padding:14px 16px;font-weight:600;font-size:15.5px;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:10px;color:#f0f0ff}
+.faq>summary::-webkit-details-marker{display:none}
+.faq>summary::after{content:'+';color:var(--violet-glow);font-size:22px;line-height:1;flex-shrink:0}
+.faq[open]>summary::after{content:'\2013'}
+.faq[open]>summary{color:var(--violet-glow)}
+.faq-a{padding:0 16px 14px;color:var(--gray);font-size:15px;line-height:1.6}
 @media print{
   .bg-fx,.tiktok-bg,.noise,.topbar,.sidebar,.bottomnav,.alert,.no-print{display:none!important}
   body{background:#fff;color:#000}
@@ -541,6 +548,7 @@ footer .slo{color:var(--violet-glow);font-family:'Barlow Condensed';font-weight:
       <div class="side-prog"><div class="t"><span>Tu progreso</span><span id="progPct">0%</span></div><div class="pbar"><div class="pfill" id="progFill"></div></div></div>
       <div class="side-group">Inicio</div>
             <div class="nav-i" data-p="dashboard" onclick="go('dashboard')"><span class="e">🏠</span>Mi Dashboard</div>
+      <div class="nav-i" data-p="ayuda" onclick="go('ayuda')"><span class="e">🆘</span>Ayuda y Soporte</div>
       <div class="side-group">Módulo 1 · Configuración</div>
             <div class="nav-i" id="nav-m1-tiktok" data-p="m1-tiktok" onclick="go('m1-tiktok')"><span class="e">📱</span>TikTok Argentina<span class="lk"></span></div>
             <div class="nav-i" id="nav-m1-cuenta" data-p="m1-cuenta" onclick="go('m1-cuenta')"><span class="e">⚙️</span>Crear tu Cuenta<span class="lk"></span></div>
@@ -556,6 +564,13 @@ footer .slo{color:var(--violet-glow);font-family:'Barlow Condensed';font-weight:
             <div class="nav-i" id="nav-m3-primer-live" data-p="m3-primer-live" onclick="go('m3-primer-live')"><span class="e">🔴</span>Tu Primer LIVE<span class="lk"></span></div>
       <div class="nav-i" id="nav-m3-config" data-p="m3-config" onclick="go('m3-config')"><span class="e">⚙️</span>Configuraciones TikTok<span class="lk"></span></div>
             <div class="nav-i" id="nav-m3-escalar" data-p="m3-escalar" onclick="go('m3-escalar')"><span class="e">📈</span>Escalar<span class="lk"></span></div>
+      <div class="side-group">Módulo 4 · Crecimiento</div>
+      <div class="nav-i" id="nav-m4-algoritmo" data-p="m4-algoritmo" onclick="go('m4-algoritmo')"><span class="e">🧠</span>El Algoritmo<span class="lk"></span></div>
+      <div class="nav-i" id="nav-m4-videos" data-p="m4-videos" onclick="go('m4-videos')"><span class="e">🎬</span>Videos que Atraen<span class="lk"></span></div>
+      <div class="nav-i" id="nav-m4-tendencias" data-p="m4-tendencias" onclick="go('m4-tendencias')"><span class="e">🔥</span>Tendencias y Hashtags<span class="lk"></span></div>
+      <div class="nav-i" id="nav-m4-calendario" data-p="m4-calendario" onclick="go('m4-calendario')"><span class="e">🗓️</span>Calendario de Contenido<span class="lk"></span></div>
+      <div class="nav-i" id="nav-m4-metricas" data-p="m4-metricas" onclick="go('m4-metricas')"><span class="e">📊</span>Leé tus Números<span class="lk"></span></div>
+      <div class="nav-i" id="nav-m4-ads" data-p="m4-ads" onclick="go('m4-ads')"><span class="e">🚀</span>Escalar con Anuncios<span class="lk"></span></div>
       <div class="side-group">Bonus</div>
             <div class="nav-i" id="nav-bonus-ideas" data-p="bonus-ideas" onclick="go('bonus-ideas')"><span class="e">💡</span>10 Ideas de Lives<span class="lk"></span></div>
             <div class="nav-i" id="nav-bonus-errores" data-p="bonus-errores" onclick="go('bonus-errores')"><span class="e">⚠️</span>Errores Fatales<span class="lk"></span></div>
@@ -1031,6 +1046,7 @@ const COURSE_ORDER = [
   'm1-tiktok','m1-cuenta','m1-kit','m1-checklist',
   'm2-estructura','m2-guion','m2-frases',
   'm3-cerrar','m3-whatsapp','m3-primer-live','m3-config','m3-escalar',
+  'm4-algoritmo','m4-videos','m4-tendencias','m4-calendario','m4-metricas','m4-ads',
   'bonus-ideas','bonus-errores','bonus-plan','bonus-pdf'
 ];
 const TOTAL_PAGES = COURSE_ORDER.length;
@@ -1158,7 +1174,7 @@ function showUnlockToast(p){
     'm2-estructura':'Estructura del Live','m2-guion':'Guiones',
     'm2-frases':'Frases que Venden','m3-cerrar':'Cómo Cerrar Ventas',
     'm3-whatsapp':'Mensajes Llamativos','m3-primer-live':'Tu Primer LIVE',
-    'm3-escalar':'Escalar','bonus-ideas':'Ideas de Contenido',
+    'm3-escalar':'Escalar','m4-algoritmo':'El Algoritmo','m4-videos':'Videos que Atraen','m4-tendencias':'Tendencias y Hashtags','m4-calendario':'Calendario de Contenido','m4-metricas':'Leé tus Números','m4-ads':'Escalar con Anuncios','bonus-ideas':'Ideas de Contenido',
     'bonus-errores':'Errores Comunes','bonus-plan':'Plan 7 Días'
   };
   const t=document.createElement('div');
@@ -1232,7 +1248,7 @@ function showLockedToast(p){
     'm2-estructura':'Estructura del Live','m2-guion':'Guiones',
     'm2-frases':'Frases que Venden','m3-cerrar':'Cómo Cerrar Ventas',
     'm3-whatsapp':'Mensajes Llamativos','m3-primer-live':'Tu Primer LIVE',
-    'm3-escalar':'Escalar','bonus-ideas':'Ideas de Contenido',
+    'm3-escalar':'Escalar','m4-algoritmo':'El Algoritmo','m4-videos':'Videos que Atraen','m4-tendencias':'Tendencias y Hashtags','m4-calendario':'Calendario de Contenido','m4-metricas':'Leé tus Números','m4-ads':'Escalar con Anuncios','bonus-ideas':'Ideas de Contenido',
     'bonus-errores':'Errores Comunes','bonus-plan':'Plan 7 Días'
   };
   const t=document.createElement('div');
@@ -1343,7 +1359,7 @@ function showAuthGate(){
 function authProceed(){document.getElementById('authgate').classList.remove('show');openPlatform();}
 function authLogout(){document.getElementById('authgate').classList.remove('show');logout();}
 
-const LESSON_TITLES={'m1-tiktok':'TikTok Argentina','m1-cuenta':'Crear tu Cuenta','m1-kit':'Armar el Kit','m1-checklist':'Checklist Pre-Live','m2-estructura':'Estructura del Live','m2-guion':'Guiones Listos','m2-frases':'Frases que Venden','m3-cerrar':'Cómo Cerrar Ventas','m3-whatsapp':'Mensajes Llamativos','m3-primer-live':'Tu Primer LIVE','m3-config':'Configuraciones de TikTok','m3-escalar':'Escalar','bonus-ideas':'10 Ideas de Lives','bonus-errores':'Errores Fatales','bonus-plan':'Plan 7 Días','bonus-pdf':'Guiones que Venden'};
+const LESSON_TITLES={'m1-tiktok':'TikTok Argentina','m1-cuenta':'Crear tu Cuenta','m1-kit':'Armar el Kit','m1-checklist':'Checklist Pre-Live','m2-estructura':'Estructura del Live','m2-guion':'Guiones Listos','m2-frases':'Frases que Venden','m3-cerrar':'Cómo Cerrar Ventas','m3-whatsapp':'Mensajes Llamativos','m3-primer-live':'Tu Primer LIVE','m3-config':'Configuraciones de TikTok','m3-escalar':'Escalar','m4-algoritmo':'El Algoritmo','m4-videos':'Videos que Atraen','m4-tendencias':'Tendencias y Hashtags','m4-calendario':'Calendario de Contenido','m4-metricas':'Leé tus Números','m4-ads':'Escalar con Anuncios','bonus-ideas':'10 Ideas de Lives','bonus-errores':'Errores Fatales','bonus-plan':'Plan 7 Días','bonus-pdf':'Guiones que Venden'};
 let CM_PENDING=null;
 function confirmComplete(p){
   if(isCompleted(p)){markComplete(p);return;}
@@ -1907,6 +1923,11 @@ Si te sacás una foto usándolo y nos etiquetás, te damos descuento en tu próx
   </div>
 
 
+  <h3 class="sec-h">🛍️ TikTok Shop (lo que viene)</h3>
+  <div class="alert alert-r"><span class="ae">🔴</span><div><b>En Argentina (2026) TikTok Shop todavía NO está disponible.</b> Por ahora las ventas se cierran por WhatsApp.</div></div>
+  <p style="color:var(--gray);font-size:15px">TikTok Shop es la tienda dentro de la app: el cliente compra sin salir de TikTok. Ya funciona en varios países de la región.</p>
+  <div class="tip">💡 Preparate desde ahora: el que llegue con cuenta activa, comunidad y videos va a arrancar con ventaja el día que se habilite.</div>
+
   <div style="display:flex;gap:10px;margin-top:28px;margin-bottom:8px">
     <button class="btn" onclick="go('dashboard')" style="flex:1;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12)">🏠 Inicio</button>
     <button id="complete-btn-m3-config" class="btn btn-green" onclick="confirmComplete('m3-config')" style="flex:2">Siguiente →</button>
@@ -1957,7 +1978,7 @@ Si te sacás una foto usándolo y nos etiquetás, te damos descuento en tu próx
       <div style="text-align:center;font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:18px;margin:18px 0 12px;color:#c084fc">💎 Programa de crecimiento Magency</div>
       <div class="grid4"><div style="background:rgba(155,77,202,.1);border:1px solid var(--border);border-radius:12px;padding:11px 12px;display:flex;align-items:center;gap:9px;font-size:13.5px"><span style="font-size:18px">📱</span>Instagram</div><div style="background:rgba(155,77,202,.1);border:1px solid var(--border);border-radius:12px;padding:11px 12px;display:flex;align-items:center;gap:9px;font-size:13.5px"><span style="font-size:18px">📘</span>Facebook</div><div style="background:rgba(155,77,202,.1);border:1px solid var(--border);border-radius:12px;padding:11px 12px;display:flex;align-items:center;gap:9px;font-size:13.5px"><span style="font-size:18px">📲</span>WhatsApp Business</div><div style="background:rgba(155,77,202,.1);border:1px solid var(--border);border-radius:12px;padding:11px 12px;display:flex;align-items:center;gap:9px;font-size:13.5px"><span style="font-size:18px">🎥</span>Creación de contenido</div><div style="background:rgba(155,77,202,.1);border:1px solid var(--border);border-radius:12px;padding:11px 12px;display:flex;align-items:center;gap:9px;font-size:13.5px"><span style="font-size:18px">🤖</span>Automatizaciones</div><div style="background:rgba(155,77,202,.1);border:1px solid var(--border);border-radius:12px;padding:11px 12px;display:flex;align-items:center;gap:9px;font-size:13.5px"><span style="font-size:18px">📊</span>Métricas y análisis</div><div style="background:rgba(155,77,202,.1);border:1px solid var(--border);border-radius:12px;padding:11px 12px;display:flex;align-items:center;gap:9px;font-size:13.5px"><span style="font-size:18px">🎯</span>Publicidad digital</div><div style="background:rgba(155,77,202,.1);border:1px solid var(--border);border-radius:12px;padding:11px 12px;display:flex;align-items:center;gap:9px;font-size:13.5px"><span style="font-size:18px">🚀</span>Escalamiento comercial</div></div>
       <div class="alert alert-g" style="margin:16px 0 4px"><span class="ae">🎁</span><div><b>Solo para alumnos de KIT LIVE COMMERCE:</b> auditoría inicial sin costo + reunión estratégica personalizada.</div></div>
-      <a class="btn" href="https://wa.me/5492616611087?text=Hola%20Magency!%20Termin%C3%A9%20el%20curso%20KIT%20LIVE%20COMMERCE%20y%20quiero%20escalar%20con%20el%20Programa%20de%20Crecimiento.%20%C2%BFCoordinamos%20la%20auditor%C3%ADa%20inicial%3F" target="_blank" style="width:100%;font-size:1.05rem;padding:16px;margin-top:8px;background:linear-gradient(135deg,#9B4DCA,#c084fc)">🚀 Quiero escalar con Magency</a>
+      <a class="btn" href="https://wa.me/5492614196629?text=Hola%20Magency!%20Termin%C3%A9%20el%20curso%20KIT%20LIVE%20COMMERCE%20y%20quiero%20escalar%20con%20el%20Programa%20de%20Crecimiento.%20%C2%BFCoordinamos%20la%20auditor%C3%ADa%20inicial%3F" target="_blank" style="width:100%;font-size:1.05rem;padding:16px;margin-top:8px;background:linear-gradient(135deg,#9B4DCA,#c084fc)">🚀 Quiero escalar con Magency</a>
       <p style="text-align:center;color:var(--gray);font-size:12.5px;margin-top:8px">Descubrí nuevas oportunidades para tu negocio.</p>
     </div>
   </div>
@@ -1968,6 +1989,49 @@ Si te sacás una foto usándolo y nos etiquetás, te damos descuento en tu próx
 </section>
 
 <!-- IDEAS -->
+
+<section class="page" id="pg-m4-algoritmo">
+  <h1 class="ph">Cómo funciona el algoritmo 🧠</h1>
+  <p class="psub">Entendé qué premia TikTok para que te vean más.</p>
+<div class="alert alert-i"><span class="ae">🧠</span><div>En TikTok <b>no necesitás seguidores</b> para que te vean. El algoritmo le muestra cada video a gente nueva. Por eso es la mejor red para empezar de cero.</div></div><h3 class="sec-h">Qué mira el algoritmo</h3><div class="step"><div class="num">1</div><div><h4>Retención</h4><p>¿La gente se queda mirando o se va? Los primeros 3 segundos deciden todo.</p><div class="tip">💡 Empezá con el producto o una promesa, nunca con "hola, bienvenidos".</div></div></div><div class="step"><div class="num">2</div><div><h4>Tiempo de visualización</h4><p>Cuánto tiempo miran y cuántos llegan al final. Cuanto más, mejor te posiciona.</p></div></div><div class="step"><div class="num">3</div><div><h4>Interacción</h4><p>Likes, comentarios, compartidos y guardados. Pedí siempre un comentario.</p><div class="tip">💡 "Comentá tu talle / tu color" multiplica el alcance.</div></div></div><div class="step"><div class="num">4</div><div><h4>Reproducciones repetidas</h4><p>Si vuelven a ver el video, TikTok lo empuja más.</p></div></div><div class="alert alert-g"><span class="ae">✅</span><div>Para el <b>LIVE</b> sí necesitás 1000 seguidores. Para <b>videos cortos</b>, cero: cada video es una nueva oportunidad de que te descubran.</div></div>
+  <div style="display:flex;gap:10px;margin-top:28px;margin-bottom:8px"><button class="btn" onclick="go('dashboard')" style="flex:1;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12)">🏠 Inicio</button><button id="complete-btn-m4-algoritmo" class="btn btn-green" onclick="confirmComplete('m4-algoritmo')" style="flex:2">Siguiente →</button></div>
+</section>
+
+<section class="page" id="pg-m4-videos">
+  <h1 class="ph">Videos que atraen 🎬</h1>
+  <p class="psub">Los videos cortos que llenan tu LIVE de gente nueva.</p>
+<div class="alert alert-i"><span class="ae">🎬</span><div>Los <b>videos cortos</b> son los que traen gente nueva a tu perfil… y después a tu LIVE. Sin videos, tu live queda vacío.</div></div><h3 class="sec-h">Qué grabar (ideas que funcionan)</h3><div class="grid2"><div class="card"><h4 style="font-size:16px">📦 Producto en acción</h4><p style="color:var(--gray);font-size:15px;margin-top:4px">Mostralo puesto/usándose, no en una percha.</p></div><div class="card"><h4 style="font-size:16px">✨ Antes y después</h4><p style="color:var(--gray);font-size:15px;margin-top:4px">Transformación = retención asegurada.</p></div><div class="card"><h4 style="font-size:16px">🔢 "3 razones para…"</h4><p style="color:var(--gray);font-size:15px;margin-top:4px">Listas cortas, fáciles de ver hasta el final.</p></div><div class="card"><h4 style="font-size:16px">🎥 Detrás de escena</h4><p style="color:var(--gray);font-size:15px;margin-top:4px">Humaniza tu marca, genera confianza.</p></div></div><h3 class="sec-h">La fórmula del video que vende</h3><div class="step"><div class="num">1</div><div><h4>Hook en 3 segundos</h4><p>Mostrá el producto + una promesa. "Esta campera no la conseguís a este precio".</p></div></div><div class="step"><div class="num">2</div><div><h4>Mostrá el valor</h4><p>3-5 segundos: para quién es, qué problema resuelve.</p></div></div><div class="step"><div class="num">3</div><div><h4>Usá bien el kit</h4><p>Vertical, buena luz (aro/panel), audio claro (micrófono), texto en pantalla.</p><div class="tip">💡 El 80% mira sin sonido: poné subtítulos/texto.</div></div></div><div class="step"><div class="num">4</div><div><h4>Cerrá con un CTA</h4><p>"Hoy hago LIVE a las 20h, te muestro todo. Seguime para no perdértelo."</p></div></div><div class="tip">💡 Subí 1 a 3 videos por día. Constancia > perfección. Hechos > perfectos.</div>
+  <div style="display:flex;gap:10px;margin-top:28px;margin-bottom:8px"><button class="btn" onclick="go('dashboard')" style="flex:1;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12)">🏠 Inicio</button><button id="complete-btn-m4-videos" class="btn btn-green" onclick="confirmComplete('m4-videos')" style="flex:2">Siguiente →</button></div>
+</section>
+
+<section class="page" id="pg-m4-tendencias">
+  <h1 class="ph">Tendencias y hashtags 🔥</h1>
+  <p class="psub">Subite a lo que ya funciona y conseguí alcance gratis.</p>
+<div class="alert alert-i"><span class="ae">🔥</span><div>Subirte a lo que ya es tendencia te da alcance gratis. No tenés que inventar nada: <b>adaptá</b> lo que funciona a tu producto.</div></div><div class="step"><div class="num">🎵</div><div><h4>Sonidos en tendencia</h4><p>Usá audios con la flechita ↗ (en subida). TikTok empuja los videos con esos sonidos.</p><div class="tip">💡 Cuando veas un sonido que se repite, guardalo para usarlo después.</div></div></div><div class="step"><div class="num">📈</div><div><h4>Tendencias y formatos</h4><p>Mirá tu "Para ti" 10 min por día. Si ves un formato viral, hacelo con tu producto.</p></div></div><div class="step"><div class="num">#️⃣</div><div><h4>Hashtags</h4><p>Mezclá 1 amplio (#argentina), 1 de rubro (#ropa) y 1 local/nicho (#ventasmendoza). Con 3-5 alcanza.</p></div></div><div class="step"><div class="num">⏰</div><div><h4>Horarios</h4><p>Publicá 1-2 horas antes del pico de tu público (tarde-noche, 18-22h).</p></div></div>
+  <div style="display:flex;gap:10px;margin-top:28px;margin-bottom:8px"><button class="btn" onclick="go('dashboard')" style="flex:1;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12)">🏠 Inicio</button><button id="complete-btn-m4-tendencias" class="btn btn-green" onclick="confirmComplete('m4-tendencias')" style="flex:2">Siguiente →</button></div>
+</section>
+
+<section class="page" id="pg-m4-calendario">
+  <h1 class="ph">Calendario de contenido 🗓️</h1>
+  <p class="psub">Qué postear cada día para no parar de crecer.</p>
+<div class="alert alert-i"><span class="ae">🗓️</span><div>No improvises. Con un plan simple por día, mantenés la <b>constancia</b> que premia el algoritmo.</div></div><h3 class="sec-h">Tu semana ideal</h3><div class="days"><div class="day"><div class="d">Lun</div><p style="margin-top:6px">Video de producto nuevo</p></div><div class="day"><div class="d">Mar</div><p style="margin-top:6px">Tip o consejo rápido</p></div><div class="day live"><div class="d">Mié</div><p style="margin-top:6px">🔴 LIVE de ventas</p></div><div class="day"><div class="d">Jue</div><p style="margin-top:6px">Detrás de escena</p></div><div class="day"><div class="d">Vie</div><p style="margin-top:6px">Antes/después o reseña</p></div><div class="day live"><div class="d">Sáb</div><p style="margin-top:6px">🔴 LIVE + aviso del próximo</p></div><div class="day"><div class="d">Dom</div><p style="margin-top:6px">Recortes del live en videos cortos</p></div></div><div class="alert alert-g" style="margin-top:14px"><span class="ae">♻️</span><div><b>Reutilizá todo:</b> de cada LIVE sacás 4-5 videos cortos para la semana siguiente. Grabás una vez, publicás muchas.</div></div><div class="tip">💡 Meta semanal: 3 videos cortos mínimos + 2 a 3 LIVES.</div>
+  <div style="display:flex;gap:10px;margin-top:28px;margin-bottom:8px"><button class="btn" onclick="go('dashboard')" style="flex:1;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12)">🏠 Inicio</button><button id="complete-btn-m4-calendario" class="btn btn-green" onclick="confirmComplete('m4-calendario')" style="flex:2">Siguiente →</button></div>
+</section>
+
+<section class="page" id="pg-m4-metricas">
+  <h1 class="ph">Leé tus números 📊</h1>
+  <p class="psub">Interpretá tus estadísticas para vender más.</p>
+<div class="alert alert-i"><span class="ae">📊</span><div>Los números te dicen qué repetir y qué cambiar. No para obsesionarte: para <b>mejorar</b>.</div></div><h3 class="sec-h">Dónde verlos</h3><div class="step"><div class="num">📱</div><div><h4>TikTok Studio / Estadísticas</h4><p>Activá la cuenta de empresa y entrá a "Estadísticas" o "TikTok Studio".</p></div></div><h3 class="sec-h">Qué mirar en tus videos</h3><div class="grid2"><div class="card"><h4 style="font-size:16px">👁️ Visualizaciones</h4><p style="color:var(--gray);font-size:15px;margin-top:4px">Cuánta gente lo vio.</p></div><div class="card"><h4 style="font-size:16px">⏱️ Tiempo promedio</h4><p style="color:var(--gray);font-size:15px;margin-top:4px">Si es bajo, el hook no engancha.</p></div><div class="card"><h4 style="font-size:16px">✅ % que vio completo</h4><p style="color:var(--gray);font-size:15px;margin-top:4px">Lo más importante para el alcance.</p></div><div class="card"><h4 style="font-size:16px">🔎 De dónde vienen</h4><p style="color:var(--gray);font-size:15px;margin-top:4px">"Para ti" = el algoritmo te está empujando.</p></div></div><h3 class="sec-h">En tu LIVE</h3><div class="step"><div class="num">🔴</div><div><h4>Mirá lo importante</h4><p>Espectadores en simultáneo, picos (qué mostrabas ahí), comentarios y seguidores nuevos.</p><div class="tip">💡 Repetí lo que generó picos. Eso es lo que tu público quiere ver.</div></div></div>
+  <div style="display:flex;gap:10px;margin-top:28px;margin-bottom:8px"><button class="btn" onclick="go('dashboard')" style="flex:1;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12)">🏠 Inicio</button><button id="complete-btn-m4-metricas" class="btn btn-green" onclick="confirmComplete('m4-metricas')" style="flex:2">Siguiente →</button></div>
+</section>
+
+<section class="page" id="pg-m4-ads">
+  <h1 class="ph">Escalar con anuncios 🚀</h1>
+  <p class="psub">El siguiente nivel: pauta para llegar a más clientes.</p>
+<div class="alert alert-i"><span class="ae">🚀</span><div>Cuando ya vendés en orgánico y querés <b>más volumen</b>, los anuncios (TikTok Ads) te llevan a mucha más gente con intención de compra.</div></div><div class="step"><div class="num">1</div><div><h4>¿Cuándo conviene?</h4><p>Cuando ya tenés videos que funcionan y un live que vende. Primero orgánico, después pauta.</p></div></div><div class="step"><div class="num">2</div><div><h4>Qué se hace</h4><p>Se promocionan tus mejores videos y se arman campañas para llegar a clientes nuevos.</p></div></div><div class="step"><div class="num">3</div><div><h4>El error caro</h4><p>La pauta mal hecha quema plata rápido. Necesitás estrategia, segmentación y medición.</p></div></div><div class="magency" style="margin-top:16px"><div class="logo" style="justify-content:center"><span class="txt">KIT <span class="lv">LIVE</span> COMMERCE</span></div><p style="margin:10px 0;font-size:15px;color:#f0f0ff">En <b>Magency</b> gestionamos tus anuncios para que cada peso rinda. <b>50% OFF</b> exclusivo para alumnos.</p><a class="btn" href="https://wa.me/5492614196629?text=Hola%20Magency!%20Quiero%20escalar%20mis%20ventas%20con%20anuncios%20(TikTok%20Ads)." target="_blank">🚀 Quiero escalar con anuncios</a></div>
+  <div style="display:flex;gap:10px;margin-top:28px;margin-bottom:8px"><button class="btn" onclick="go('dashboard')" style="flex:1;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12)">🏠 Inicio</button><button id="complete-btn-m4-ads" class="btn btn-green" onclick="confirmComplete('m4-ads')" style="flex:2">Siguiente →</button></div>
+</section>
+
 <section class="page" id="pg-bonus-ideas">
   <h1 class="ph">10 Ideas de Lives 💡</h1>
   <p class="psub">Para que nunca te quedes sin contenido.</p>
@@ -2074,6 +2138,46 @@ Si te sacás una foto usándolo y nos etiquetás, te damos descuento en tu próx
   </div>
 </section>
 
+<!-- AYUDA Y SOPORTE -->
+<section class="page" id="pg-ayuda">
+  <h1 class="ph">Ayuda y Soporte 🆘</h1>
+  <p class="psub">Todo lo que necesitás saber sobre tu kit y el curso. Tocá cada pregunta para ver la respuesta.</p>
+  <a class="btn btn-green" href="https://wa.me/5492614196629?text=Hola%20Magency!%20Tengo%20una%20consulta%20sobre%20mi%20Kit%20Live%20Commerce." target="_blank" style="display:inline-flex;margin-bottom:18px"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.5 8.5 0 01-12.5 7.5L3 21l2-5.5A8.5 8.5 0 1121 11.5z"/></svg> Escribinos por WhatsApp</a>
+  <h3 class="sec-h">🎥 El kit y su armado</h3>
+  <details class="faq"><summary>¿Qué incluye el kit?</summary><div class="faq-a">2 trípodes, 1 panel LED, aro de luz con soporte para celular y 2 micrófonos profesionales inalámbricos con receptor de doble ficha.</div></details>
+  <details class="faq"><summary>¿El kit viene armado?</summary><div class="faq-a">No. Viene con folletos paso a paso para armar cada producto, y el armado también está explicado dentro de la academia.</div></details>
+  <details class="faq"><summary>¿Necesito saber de tecnología para armarlo?</summary><div class="faq-a">Para nada. Los folletos y los videos del curso te guían en cada paso.</div></details>
+  <details class="faq"><summary>¿Incluye el celular?</summary><div class="faq-a">No. Usás tu propio celular; el kit le suma luz y audio profesional.</div></details>
+  <details class="faq"><summary>¿Sirve para cualquier celular?</summary><div class="faq-a">Sí, funciona con Android y iPhone.</div></details>
+  <details class="faq"><summary>¿Solo sirve para TikTok?</summary><div class="faq-a">Está pensado para TikTok Live, pero también te sirve para Instagram, Facebook y streams.</div></details>
+  <details class="faq"><summary>¿Los micrófonos son inalámbricos?</summary><div class="faq-a">Sí, son 2 micrófonos profesionales con receptor (doble ficha) que se conecta al celular.</div></details>
+  <h3 class="sec-h">💳 Pago, envío y posventa</h3>
+  <details class="faq"><summary>¿Cuánto cuesta el kit?</summary><div class="faq-a">Precio promocional de $299.000, válido hasta el 31/09/2026.</div></details>
+  <details class="faq"><summary>¿Cómo puedo pagar?</summary><div class="faq-a">Solo por transferencia bancaria (de cualquier banco).</div></details>
+  <details class="faq"><summary>¿Hacen envíos?</summary><div class="faq-a">Por el momento entregamos solo en Mendoza, con riders propios: Gran Mendoza con envío gratis y resto de Mendoza por $5.000. Próximamente habilitamos envíos a todo el país.</div></details>
+  <details class="faq"><summary>¿Cuánto tarda en llegar?</summary><div class="faq-a">Entre 3 y 5 días hábiles después de acreditado el pago.</div></details>
+  <details class="faq"><summary>¿Qué pasa si llega golpeado o roto?</summary><div class="faq-a">Los equipos se prueban antes de salir y el rider gestiona la entrega. Ante cualquier inconveniente, escribinos al WhatsApp y lo resolvemos.</div></details>
+  <details class="faq"><summary>¿El kit tiene garantía?</summary><div class="faq-a">Garantizamos que los equipos salen probados y funcionando de fábrica. Por tratarse de productos electrónicos, no ofrecemos garantía extendida ni reparación.</div></details>
+  <details class="faq"><summary>¿Puedo devolverlo si me arrepiento?</summary><div class="faq-a">Sí, tenés 10 días para solicitar la devolución. El costo del envío de la devolución corre por cuenta del cliente ($40.000).</div></details>
+  <details class="faq"><summary>¿Reparan o cambian productos?</summary><div class="faq-a">No realizamos reparaciones ni cambios, pero te damos soporte y acompañamiento por WhatsApp.</div></details>
+  <details class="faq"><summary>Los micrófonos no se escuchan o no conectan, ¿qué hago?</summary><div class="faq-a">Casi siempre es un tema de configuración. Tenemos videos explicativos paso a paso para conectarlos. Si seguís con dudas, escribinos al WhatsApp.</div></details>
+  <details class="faq"><summary>¿Y si me roban el kit?</summary><div class="faq-a">Magency te ofrece un 20% de descuento para un kit nuevo, presentando la denuncia policial certificada.</div></details>
+  <details class="faq"><summary>¿Tienen atención al cliente?</summary><div class="faq-a">Sí, por WhatsApp: +54 9 2614 19-6629.</div></details>
+  <h3 class="sec-h">🎓 El curso / academia</h3>
+  <details class="faq"><summary>¿Cómo accedo al curso?</summary><div class="faq-a">Con el código que viene dentro de la caja del kit (formato KLC-XXXX-XXXX), desde la plataforma web.</div></details>
+  <details class="faq"><summary>¿En cuántos dispositivos puedo usar el código?</summary><div class="faq-a">Hasta 2 dispositivos.</div></details>
+  <details class="faq"><summary>¿Tengo que instalar una app?</summary><div class="faq-a">No, la academia es 100% web: entrás desde el navegador de cualquier dispositivo.</div></details>
+  <details class="faq"><summary>¿Qué incluye la academia?</summary><div class="faq-a">Curso completo de TikTok Live paso a paso, configuración de TikTok Argentina, guiones de venta, scripts de WhatsApp, plan de 7 días y, al terminar, tu certificado + la biblioteca de guiones.</div></details>
+  <details class="faq"><summary>¿Sirve si nunca usé TikTok?</summary><div class="faq-a">Sí, el curso arranca desde cero.</div></details>
+  <details class="faq"><summary>¿Recibo un certificado?</summary><div class="faq-a">Sí, al completar el curso descargás tu certificado de finalización (se genera una sola vez con tu nombre).</div></details>
+  <details class="faq"><summary>¿A quién consulto dudas del curso?</summary><div class="faq-a">Por WhatsApp +54 9 2614 19-6629 o a través de @magency.ar.</div></details>
+
+  <div class="alert alert-i" style="margin-top:10px"><span class="ae">💬</span><div>¿No encontraste tu respuesta? Escribinos a <b>+54 9 2614 19-6629</b> o a <b>@magency.ar</b> y te ayudamos.</div></div>
+  <div style="display:flex;gap:10px;margin-top:22px;margin-bottom:8px">
+    <button class="btn" onclick="go('dashboard')" style="flex:1;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12)">🏠 Inicio</button>
+  </div>
+</section>
+
 <!-- GRADUACIÓN -->
 <section class="page" id="pg-graduacion">
   <div style="text-align:center;padding:24px 0 8px">
@@ -2140,7 +2244,7 @@ Si te sacás una foto usándolo y nos etiquetás, te damos descuento en tu próx
     </div>
   </div>
 
-  <a href="https://wa.me/5492616611087?text=Hola%20Magency%21%20Acabo%20de%20finalizar%20el%20curso%20Kit%20Live%20Commerce%20y%20me%20gustar%C3%ADa%20trabajar%20con%20ustedes%20para%20el%20manejo%20de%20redes%20sociales%20y%20aprovechar%20el%2050%25%20de%20descuento.%20%C2%BFCu%C3%A1ndo%20podemos%20hablar%3F" target="_blank" style="display:flex;align-items:center;justify-content:center;gap:12px;background:linear-gradient(135deg,#22c55e,#16a34a);color:#fff;border-radius:14px;padding:18px 20px;text-decoration:none;font-family:'Barlow Condensed',sans-serif;font-size:1.2rem;font-weight:800;letter-spacing:.04em;margin-bottom:12px">
+  <a href="https://wa.me/5492614196629?text=Hola%20Magency%21%20Acabo%20de%20finalizar%20el%20curso%20Kit%20Live%20Commerce%20y%20me%20gustar%C3%ADa%20trabajar%20con%20ustedes%20para%20el%20manejo%20de%20redes%20sociales%20y%20aprovechar%20el%2050%25%20de%20descuento.%20%C2%BFCu%C3%A1ndo%20podemos%20hablar%3F" target="_blank" style="display:flex;align-items:center;justify-content:center;gap:12px;background:linear-gradient(135deg,#22c55e,#16a34a);color:#fff;border-radius:14px;padding:18px 20px;text-decoration:none;font-family:'Barlow Condensed',sans-serif;font-size:1.2rem;font-weight:800;letter-spacing:.04em;margin-bottom:12px">
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0"><path d="M21 11.5a8.5 8.5 0 01-12.5 7.5L3 21l2-5.5A8.5 8.5 0 1121 11.5z"/></svg>
     Quiero el 50% — Contactar Magency
   </a>
@@ -2156,7 +2260,7 @@ Si te sacás una foto usándolo y nos etiquetás, te damos descuento en tu próx
       <span style="font-size:.78rem;color:var(--violet-glow);font-weight:600;background:rgba(155,77,202,.12);border:1px solid var(--border);padding:6px 12px;border-radius:50px">🎮 Streams</span>
     </div>
     <p style="font-size:.97rem;color:var(--gray);line-height:1.7;margin-bottom:16px">Estamos preparando un nuevo curso enfocado en <b style="color:var(--white)">Instagram Live</b>. ¿Querés que te avisemos cuando salga?</p>
-    <a href="https://wa.me/5492616611087?text=Hola%20Magency%21%20Termin%C3%A9%20el%20curso%20Kit%20Live%20Commerce%20y%20me%20interesa%20el%20nuevo%20curso%20de%20Instagram%20Live.%20%C2%BFMe%20avisan%20cuando%20salga%3F" target="_blank" style="display:inline-flex;align-items:center;justify-content:center;gap:10px;background:linear-gradient(135deg,#9B4DCA,#c084fc);color:#fff;border-radius:14px;padding:15px 26px;text-decoration:none;font-family:'Barlow Condensed',sans-serif;font-size:1.1rem;font-weight:800;letter-spacing:.04em">
+    <a href="https://wa.me/5492614196629?text=Hola%20Magency%21%20Termin%C3%A9%20el%20curso%20Kit%20Live%20Commerce%20y%20me%20interesa%20el%20nuevo%20curso%20de%20Instagram%20Live.%20%C2%BFMe%20avisan%20cuando%20salga%3F" target="_blank" style="display:inline-flex;align-items:center;justify-content:center;gap:10px;background:linear-gradient(135deg,#9B4DCA,#c084fc);color:#fff;border-radius:14px;padding:15px 26px;text-decoration:none;font-family:'Barlow Condensed',sans-serif;font-size:1.1rem;font-weight:800;letter-spacing:.04em">
       🔔 Avisame del curso de Instagram Live
     </a>
   </div>
@@ -2182,7 +2286,7 @@ buildPages=function(){
   if(pc)pc.innerHTML=PLAN_ITEMS.map(t=>'<div class="chk" data-ck="klc_plan_chk" onclick="toggleChk(this,\'klc_plan_chk\')"><span class="box"><svg viewBox="0 0 24 24"><path d="M4 12l5 5L20 6"/></svg></span><span>'+t+'</span></div>').join('');
   restoreChk();
   updateProgress();
-  const COURSE_ORDER_LOCAL=['m1-tiktok','m1-cuenta','m1-kit','m1-checklist','m2-estructura','m2-guion','m2-frases','m3-cerrar','m3-whatsapp','m3-primer-live','m3-config','m3-escalar','bonus-ideas','bonus-errores','bonus-plan','bonus-pdf'];
+  const COURSE_ORDER_LOCAL=['m1-tiktok','m1-cuenta','m1-kit','m1-checklist','m2-estructura','m2-guion','m2-frases','m3-cerrar','m3-whatsapp','m3-primer-live','m3-config','m3-escalar','m4-algoritmo','m4-videos','m4-tendencias','m4-calendario','m4-metricas','m4-ads','bonus-ideas','bonus-errores','bonus-plan','bonus-pdf'];
   COURSE_ORDER_LOCAL.forEach(p=>renderCompleteBtn(p));
   // Si el curso ya estaba completado, ir directo a graduación
   if(getCompleted().length>=TOTAL_PAGES){
