@@ -575,8 +575,10 @@ footer .slo{color:var(--violet-glow);font-family:'Barlow Condensed';font-weight:
             <div class="nav-i" id="nav-bonus-ideas" data-p="bonus-ideas" onclick="go('bonus-ideas')"><span class="e">💡</span>10 Ideas de Lives<span class="lk"></span></div>
             <div class="nav-i" id="nav-bonus-errores" data-p="bonus-errores" onclick="go('bonus-errores')"><span class="e">⚠️</span>Errores Fatales<span class="lk"></span></div>
             <div class="nav-i" id="nav-bonus-plan" data-p="bonus-plan" onclick="go('bonus-plan')"><span class="e">🚀</span>Plan 7 Días<span class="lk"></span></div>
+            <div class="nav-i locked" id="nav-recomendaciones" data-p="recomendaciones" onclick="go('recomendaciones')"><span class="e">💡</span>Recomendaciones LIVE<span class="lk"></span></div>
             <div class="nav-i locked" id="nav-bonus-pdf" data-p="bonus-pdf" onclick="go('bonus-pdf')"><span class="e">📕</span>Guiones PDF<span class="tag-lock" id="bonus-pdf-lock">🔒</span></div>
       <div class="side-group" style="margin-top:14px">Finalización</div>
+      <div class="nav-i locked" id="nav-checklist-final" data-p="checklist-final" onclick="goChecklistFinal()"><span class="e">📋</span>Checklist Final<span class="tag-lock" id="checklist-final-lock">🔒</span></div>
       <div class="nav-i locked" id="nav-final" onclick="openFinalNav()"><span class="e">🎓</span>Final del curso<span class="tag-lock" id="final-lock">🔒</span></div>
     </aside>
 
@@ -591,6 +593,44 @@ footer .slo{color:var(--violet-glow);font-family:'Barlow Condensed';font-weight:
     <div class="bn-i locked" id="bni-m3-whatsapp" data-p="m3-whatsapp" onclick="bnClick('m3-whatsapp')"><span class="lock-badge">🔒</span><svg viewBox="0 0 24 24"><path d="M21 11.5a8.5 8.5 0 01-12.5 7.5L3 21l2-5.5A8.5 8.5 0 1121 11.5z"/></svg>WhatsApp</div>
     <div class="bn-i locked" id="bni-bonus-plan" data-p="bonus-plan" onclick="bnClick('bonus-plan')"><span class="lock-badge">🔒</span><svg viewBox="0 0 24 24"><path d="M5 19l7-14 7 14M5 19l7-4 7 4"/></svg>Plan</div>
   </nav>
+</div>
+
+<!-- MODAL IDEAS DE LIVES (fuera del template PAGES) -->
+<style>
+.idea-card{background:var(--black2);border:1px solid var(--border);border-radius:14px;padding:16px 18px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:transform .15s,border-color .15s,box-shadow .15s}
+.idea-card:hover{transform:translateY(-2px);border-color:var(--violet);box-shadow:0 8px 22px rgba(155,77,202,.2)}
+.idea-card:active{transform:scale(.98)}
+.idea-card .ic-emo{font-size:23px;flex-shrink:0}
+.idea-card .pro-num{flex-shrink:0;width:28px;height:28px;border-radius:8px;background:linear-gradient(135deg,#9B4DCA,#c084fc);color:#fff;font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:15px;display:flex;align-items:center;justify-content:center}
+.idea-dd{border-radius:10px;padding:11px 14px;font-size:14.5px;margin-top:6px;line-height:1.4}
+.idea-no{background:rgba(239,68,68,.09);border:1px solid rgba(239,68,68,.32);color:#ffd6d6}
+.idea-si{background:rgba(0,212,170,.09);border:1px solid rgba(0,212,170,.32);color:#d6fff2}
+.idea-card h4{flex:1;font-size:16px;margin:0;color:#fff}
+.idea-card .ic-more{font-size:12px;font-weight:800;color:var(--violet-glow);white-space:nowrap;letter-spacing:.5px}
+.idea-modal{position:fixed;inset:0;background:rgba(0,0,0,.74);-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;z-index:99999;padding:18px}
+.idea-modal.show{display:flex}
+.idea-sheet{background:linear-gradient(160deg,#160f22,#0c0a12);border:1px solid var(--violet);border-radius:18px;max-width:520px;width:100%;max-height:88vh;overflow-y:auto;box-shadow:0 24px 60px rgba(0,0,0,.6);animation:ideaIn .25s ease}
+@keyframes ideaIn{from{opacity:0;transform:translateY(18px) scale(.97)}to{opacity:1;transform:none}}
+.idea-sheet-head{position:sticky;top:0;background:linear-gradient(160deg,#1b1330,#140f1f);padding:16px 18px;border-bottom:1px solid rgba(155,77,202,.25);display:flex;align-items:center;gap:12px;border-radius:18px 18px 0 0;z-index:2}
+.idea-sheet-head .emo{font-size:28px;flex-shrink:0}
+.idea-sheet-head h3{font-size:20px;margin:0;flex:1;font-family:'Barlow Condensed',sans-serif;font-weight:800;color:#fff;line-height:1.1}
+.idea-close{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);color:#fff;width:34px;height:34px;border-radius:50%;font-size:17px;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;line-height:1}
+.idea-close:hover{background:rgba(239,68,68,.22);border-color:rgba(239,68,68,.5)}
+.idea-body{padding:16px 18px 6px}
+.idea-body .lbl{font-family:'Barlow Condensed',sans-serif;font-weight:800;letter-spacing:1.2px;font-size:12px;color:var(--teal);text-transform:uppercase;margin:14px 0 6px}
+.idea-body .lbl:first-child{margin-top:0}
+.idea-body p{color:#d8d2ec;font-size:15px;line-height:1.55;margin:0}
+.idea-body ol{color:#d8d2ec;font-size:15px;line-height:1.6;padding-left:20px;margin:4px 0}
+.idea-body ol li{margin-bottom:4px}
+.idea-guion{background:rgba(0,212,170,.08);border:1px solid rgba(0,212,170,.3);border-radius:10px;padding:12px 14px;color:#eafff8;font-style:italic;font-size:14.5px;margin-top:4px}
+.idea-back{margin:16px 0 4px}
+</style>
+<div class="idea-modal" id="ideaModal" onclick="if(event.target===this)closeIdea()">
+  <div class="idea-sheet">
+    <div class="idea-sheet-head"><span class="emo" id="ideaEmo">💡</span><h3 id="ideaTitle">Idea</h3><button class="idea-close" onclick="closeIdea()" aria-label="Cerrar">✕</button></div>
+    <div class="idea-body" id="ideaBody"></div>
+    <div class="idea-body" style="padding-top:0"><button class="btn idea-back" onclick="closeIdea()" style="width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14)">← Volver a las ideas</button></div>
+  </div>
 </div>
 
 <script>
@@ -1047,7 +1087,7 @@ const COURSE_ORDER = [
   'm2-estructura','m2-guion','m2-frases',
   'm3-cerrar','m3-whatsapp','m3-primer-live','m3-config','m3-escalar',
   'm4-algoritmo','m4-videos','m4-tendencias','m4-calendario','m4-metricas','m4-ads',
-  'bonus-ideas','bonus-errores','bonus-plan','bonus-pdf'
+  'bonus-ideas','bonus-errores','bonus-plan','recomendaciones','bonus-pdf'
 ];
 const TOTAL_PAGES = COURSE_ORDER.length;
 
@@ -1096,8 +1136,9 @@ function markComplete(p){
       go(next);
     },600);
   } else {
-    // Curso completo — mostrar pantalla de graduación
-    setTimeout(()=>showGraduation(),400);
+    // Última lección completada → desbloquear e ir al Checklist Final
+    updateProgress();
+    setTimeout(()=>{ if(typeof goChecklistFinal==='function'){goChecklistFinal();} else {showGraduation();} },500);
   }
 }
 
@@ -1114,6 +1155,10 @@ function showGraduation(){
     launchConfetti();
     const mn=document.querySelector('.main'); if(mn){mn.classList.remove('celebrate');void mn.offsetWidth;mn.classList.add('celebrate');setTimeout(()=>mn.classList.remove('celebrate'),1300);}
   }
+  // Marcar "Final del curso" como activo en el menú izquierdo
+  document.querySelectorAll('.nav-i,.bn-i').forEach(n=>n.classList.remove('active'));
+  const _navf=document.getElementById('nav-final'); if(_navf)_navf.classList.add('active');
+  const _bb2=document.getElementById('btnBack'); if(_bb2)_bb2.style.display='flex';
   document.querySelector('.main').scrollTo(0,0);
   window.scrollTo(0,0);
 }
@@ -1140,8 +1185,12 @@ function updateProgress(){
   updateBonusPdfLock();
   updateSidebarLocks();
   const _fb=document.getElementById('finalBanner'); if(_fb) _fb.style.display=courseCompleted()?'block':'none';
+  const cc0=courseCompleted();
+  const chkDone=(typeof finalChecklistDone==='function')?finalChecklistDone():false;
+  const _ncf=document.getElementById('nav-checklist-final'),_ncfl=document.getElementById('checklist-final-lock');
+  if(_ncf){_ncf.classList.toggle('locked',!cc0);if(_ncfl){if(chkDone){_ncfl.textContent='✓';_ncfl.className='tag-new';}else if(cc0){_ncfl.textContent='VER';_ncfl.className='tag-new';}else{_ncfl.textContent='🔒';_ncfl.className='tag-lock';}}}
   const _nf=document.getElementById('nav-final'),_nfl=document.getElementById('final-lock');
-  if(_nf){const cc=courseCompleted();_nf.classList.toggle('locked',!cc);if(_nfl){_nfl.textContent=cc?'VER':'🔒';_nfl.className=cc?'tag-new':'tag-lock';}}
+  if(_nf){const ok=cc0&&chkDone;_nf.classList.toggle('locked',!ok);if(_nfl){_nfl.textContent=ok?'VER':'🔒';_nfl.className=ok?'tag-new':'tag-lock';}}
 }
 function openFinal(){ if(typeof courseCompleted==='function' && courseCompleted()){ showGraduation(); } }
 
@@ -1186,7 +1235,11 @@ function showUnlockToast(p){
 
 function toggleMenu(){const dn=document.getElementById('drawerName');if(dn)dn.textContent=LS.get('klc_client')||'Cliente';const dk=document.getElementById('drawerKit');if(dk)dk.textContent='Kit #'+(LS.get('klc_kit')||'001');const s=document.querySelector('.sidebar'),b=document.getElementById('menuBackdrop');if(!s)return;const op=s.classList.toggle('open');if(b)b.classList.toggle('open',op);}
 function closeMenu(){const s=document.querySelector('.sidebar'),b=document.getElementById('menuBackdrop');if(s)s.classList.remove('open');if(b)b.classList.remove('open');}
-function openFinalNav(){closeMenu();if(typeof courseCompleted==='function'&&courseCompleted()){showGraduation();}else{showLockedToast('bonus-pdf');}}
+function openFinalNav(){closeMenu();
+  if(!(typeof courseCompleted==='function'&&courseCompleted())){showLockedToast('bonus-pdf');return;}
+  if(typeof finalChecklistDone==='function'&&!finalChecklistDone()){go('checklist-final');if(typeof updateFinalChecklist==='function')updateFinalChecklist();if(typeof showFinalChkToast==='function')showFinalChkToast();return;}
+  showGraduation();
+}
 function openVideo(src,title){const m=document.getElementById('welcomeVideoModal');if(!m)return;const v=document.getElementById('welcomeVideo');const t=document.getElementById('vmodalTitle');if(t&&title)t.textContent=title;if(v&&src&&!(v.getAttribute('src')===src)){v.setAttribute('src',src);v.removeAttribute('poster');v.load();}m.classList.add('show');if(v){try{v.currentTime=0;}catch(e){}const p=v.play();if(p&&p.catch)p.catch(()=>{});}}
 function openWelcomeVideo(){openVideo('bienvenida.mp4','🎬 Tu bienvenida');}
 function openChecklistVideo(){openVideo('video-checklist.mp4','🎥 Video del paso');}
@@ -1269,9 +1322,9 @@ function renderCompleteBtn(p){
   if(isCompleted(p)){
     // ya completada: liberada, dice Siguiente y avanza
     if(next){btn.textContent='Siguiente →'; btn.onclick=function(){go(next);};}
-    else{btn.textContent='🏆 Ver mi logro'; btn.onclick=function(){showGraduation();};}
+    else{btn.textContent='Siguiente → Checklist Final 📋'; btn.onclick=function(){goChecklistFinal();};}
   } else {
-    btn.textContent = lastLesson ? '🏆 Ver mi logro' : 'Siguiente →';
+    btn.textContent = lastLesson ? 'Siguiente → Checklist Final 📋' : 'Siguiente →';
     btn.onclick=function(){confirmComplete(p);};
   }
 }
@@ -1282,10 +1335,11 @@ function toggleChk(el,key){
   const all=document.querySelectorAll('[data-ck="'+key+'"]');
   const state=[];all.forEach((c,i)=>{if(c.classList.contains('done'))state.push(i);});
   LS.set(key,JSON.stringify(state));
+  if(key==='klc_final_chk' && typeof updateFinalChecklist==='function') updateFinalChecklist();
 }
 function restoreChk(){
   document.querySelectorAll('[data-ck]').forEach(c=>c.classList.remove('done'));
-  ['klc_checklist','klc_plan_chk','klc_escalar_chk'].forEach(key=>{
+  ['klc_checklist','klc_plan_chk','klc_escalar_chk','klc_final_chk'].forEach(key=>{
     let st;try{st=JSON.parse(LS.get(key)||'[]')}catch(e){st=[]}
     const all=document.querySelectorAll('[data-ck="'+key+'"]');
     st.forEach(i=>{if(all[i])all[i].classList.add('done');});
@@ -1359,7 +1413,7 @@ function showAuthGate(){
 function authProceed(){document.getElementById('authgate').classList.remove('show');openPlatform();}
 function authLogout(){document.getElementById('authgate').classList.remove('show');logout();}
 
-const LESSON_TITLES={'m1-tiktok':'TikTok Argentina','m1-cuenta':'Crear tu Cuenta','m1-kit':'Armar el Kit','m1-checklist':'Checklist Pre-Live','m2-estructura':'Estructura del Live','m2-guion':'Guiones Listos','m2-frases':'Frases que Venden','m3-cerrar':'Cómo Cerrar Ventas','m3-whatsapp':'Mensajes Llamativos','m3-primer-live':'Tu Primer LIVE','m3-config':'Configuraciones de TikTok','m3-escalar':'Escalar','m4-algoritmo':'El Algoritmo','m4-videos':'Videos que Atraen','m4-tendencias':'Tendencias y Hashtags','m4-calendario':'Calendario de Contenido','m4-metricas':'Leé tus Números','m4-ads':'Escalar con Anuncios','bonus-ideas':'10 Ideas de Lives','bonus-errores':'Errores Fatales','bonus-plan':'Plan 7 Días','bonus-pdf':'Guiones que Venden'};
+const LESSON_TITLES={'m1-tiktok':'TikTok Argentina','m1-cuenta':'Crear tu Cuenta','m1-kit':'Armar el Kit','m1-checklist':'Checklist Pre-Live','m2-estructura':'Estructura del Live','m2-guion':'Guiones Listos','m2-frases':'Frases que Venden','m3-cerrar':'Cómo Cerrar Ventas','m3-whatsapp':'Mensajes Llamativos','m3-primer-live':'Tu Primer LIVE','m3-config':'Configuraciones de TikTok','m3-escalar':'Escalar','m4-algoritmo':'El Algoritmo','m4-videos':'Videos que Atraen','m4-tendencias':'Tendencias y Hashtags','m4-calendario':'Calendario de Contenido','m4-metricas':'Leé tus Números','m4-ads':'Escalar con Anuncios','bonus-ideas':'10 Ideas de Lives','bonus-errores':'Errores Fatales','bonus-plan':'Plan 7 Días','recomendaciones':'Recomendaciones LIVE','bonus-pdf':'Guiones que Venden'};
 let CM_PENDING=null;
 function confirmComplete(p){
   if(isCompleted(p)){markComplete(p);return;}
@@ -1632,11 +1686,14 @@ const PAGES = `
 <section class="page" id="pg-m1-cuenta">
   <h1 class="ph">Crear tu Cuenta ⚙️</h1>
   <p class="psub">5 pasos para dejar tu perfil listo para vender.</p>
-  <div class="step"><div class="num">1</div><div><h4>📲 Descargar TikTok</h4><p>Bajala desde App Store (iPhone) o Play Store (Android).</p><div class="tip">💡 Usá WiFi para que baje rápido y se actualice sola.</div></div></div>
-  <div class="step"><div class="num">2</div><div><h4>📧 Crear con el mail del negocio</h4><p>No uses tu mail personal. Creá uno tipo tunegocio@gmail.com para separar todo.</p><div class="tip">💡 Anotá usuario y contraseña en un lugar seguro.</div></div></div>
-  <div class="step"><div class="num">3</div><div><h4>✨ Optimizar el perfil</h4><p>Foto = logo 200x200 px · Nombre simple y claro · Bio de máximo 80 caracteres que diga qué vendés y dónde.</p><div class="tip">💡 Ej: "Ropa de mujer 👗 Envíos a todo el país 📦 Live los domingos 🔴"</div></div></div>
-  <div class="step"><div class="num">4</div><div><h4>🔗 Link de WhatsApp en la bio</h4><p>Poné: <span class="mono" style="color:var(--violet-glow)">https://wa.me/549261XXXXXXX</span> (reemplazá por tu número con código de país y área).</p><div class="tip">💡 Probalo: tiene que abrir el chat directo.</div></div></div>
-  <div class="step"><div class="num">5</div><div><h4>🎥 Subir 3 videos antes del primer live</h4><p>Videos cortos mostrando productos. Así la cuenta no aparece vacía y el algoritmo te conoce.</p><div class="tip">💡 No esperes que sean perfectos. Hechos > perfectos.</div></div></div>
+  <p style="color:var(--violet-glow);font-size:13px;margin:-6px 0 12px;font-weight:600">👆 Tocá cada paso para ver el detalle.</p>
+  <div style="display:flex;flex-direction:column;gap:9px">
+    <div class="idea-card" onclick="openAcc('a1')"><span class="pro-num">1</span><h4>📲 Descargar TikTok</h4><span class="ic-more">Ver +</span></div>
+    <div class="idea-card" onclick="openAcc('a2')"><span class="pro-num">2</span><h4>📧 Crear con el mail del negocio</h4><span class="ic-more">Ver +</span></div>
+    <div class="idea-card" onclick="openAcc('a3')"><span class="pro-num">3</span><h4>✨ Optimizar el perfil</h4><span class="ic-more">Ver +</span></div>
+    <div class="idea-card" onclick="openAcc('a4')" style="border-color:var(--green);background:linear-gradient(135deg,rgba(37,211,102,.12),rgba(0,212,170,.06))"><span class="pro-num" style="background:linear-gradient(135deg,#25D366,#00d4aa)">4</span><h4>🔗 Link de WhatsApp en la bio</h4><span class="ic-more">Ver +</span></div>
+    <div class="idea-card" onclick="openAcc('a5')"><span class="pro-num">5</span><h4>🎥 Subir 3 videos antes del primer live</h4><span class="ic-more">Ver +</span></div>
+  </div>
   <div style="display:flex;gap:10px;margin-top:28px;margin-bottom:8px">
     <button class="btn" onclick="go('dashboard')" style="flex:1;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12)">🏠 Inicio</button>
     <button id="complete-btn-m1-cuenta" class="btn btn-green" onclick="confirmComplete('m1-cuenta')" style="flex:2">Siguiente →</button>
@@ -2028,24 +2085,25 @@ Si te sacás una foto usándolo y nos etiquetás, te damos descuento en tu próx
 <section class="page" id="pg-m4-ads">
   <h1 class="ph">Escalar con anuncios 🚀</h1>
   <p class="psub">El siguiente nivel: pauta para llegar a más clientes.</p>
-<div class="alert alert-i"><span class="ae">🚀</span><div>Cuando ya vendés en orgánico y querés <b>más volumen</b>, los anuncios (TikTok Ads) te llevan a mucha más gente con intención de compra.</div></div><div class="step"><div class="num">1</div><div><h4>¿Cuándo conviene?</h4><p>Cuando ya tenés videos que funcionan y un live que vende. Primero orgánico, después pauta.</p></div></div><div class="step"><div class="num">2</div><div><h4>Qué se hace</h4><p>Se promocionan tus mejores videos y se arman campañas para llegar a clientes nuevos.</p></div></div><div class="step"><div class="num">3</div><div><h4>El error caro</h4><p>La pauta mal hecha quema plata rápido. Necesitás estrategia, segmentación y medición.</p></div></div><div class="magency" style="margin-top:16px"><div class="logo" style="justify-content:center"><span class="txt">KIT <span class="lv">LIVE</span> COMMERCE</span></div><p style="margin:10px 0;font-size:15px;color:#f0f0ff">En <b>Magency</b> gestionamos tus anuncios para que cada peso rinda. <b>50% OFF</b> exclusivo para alumnos.</p><a class="btn" href="https://wa.me/5492614196629?text=Hola%20Magency!%20Quiero%20escalar%20mis%20ventas%20con%20anuncios%20(TikTok%20Ads)." target="_blank">🚀 Quiero escalar con anuncios</a></div>
+<div class="alert alert-i"><span class="ae">🚀</span><div>Cuando ya vendés en orgánico y querés <b>más volumen</b>, los anuncios (TikTok Ads) te llevan a mucha más gente con intención de compra.</div></div><div class="step"><div class="num">1</div><div><h4>¿Cuándo conviene?</h4><p>Cuando ya tenés videos que funcionan y un live que vende. Primero orgánico, después pauta.</p></div></div><div class="step"><div class="num">2</div><div><h4>Qué se hace</h4><p>Se promocionan tus mejores videos y se arman campañas para llegar a clientes nuevos.</p></div></div><div class="step"><div class="num">3</div><div><h4>El error caro</h4><p>La pauta mal hecha quema plata rápido. Necesitás estrategia, segmentación y medición.</p></div></div><div class="magency" style="margin-top:16px;position:relative"><div style="position:absolute;top:12px;right:12px;background:rgba(0,212,170,.15);border:1px solid rgba(0,212,170,.5);color:#00d4aa;font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:11px;letter-spacing:1.5px;padding:4px 12px;border-radius:20px">PRÓXIMAMENTE</div><div class="logo" style="justify-content:center"><span class="txt">KIT <span class="lv">LIVE</span> COMMERCE</span></div><p style="margin:10px 0 4px;font-size:15px;color:#f0f0ff"><b>Magency</b> conecta tu público con <b>META ADS</b> — Facebook e Instagram — para llevar tus ventas al siguiente nivel.</p><p style="font-size:14px;color:var(--gray)">Estamos preparando este servicio para vos. <b style="color:#c084fc">Muy pronto</b> vas a poder escalar con pauta gestionada por nuestro equipo.</p></div>
   <div style="display:flex;gap:10px;margin-top:28px;margin-bottom:8px"><button class="btn" onclick="go('dashboard')" style="flex:1;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12)">🏠 Inicio</button><button id="complete-btn-m4-ads" class="btn btn-green" onclick="confirmComplete('m4-ads')" style="flex:2">Siguiente →</button></div>
 </section>
 
 <section class="page" id="pg-bonus-ideas">
   <h1 class="ph">10 Ideas de Lives 💡</h1>
   <p class="psub">Para que nunca te quedes sin contenido.</p>
+  <p style="color:var(--violet-glow);font-size:13px;margin:-6px 0 12px;font-weight:600">👆 Tocá cada idea para ver cómo hacerla paso a paso.</p>
   <div class="grid2">
-    <div class="card"><h4>👗 Liquidación flash</h4><p style="color:var(--gray);font-size:15px">Solo en este live, 60 min. La mayor conversión.</p></div>
-    <div class="card"><h4>📦 Unboxing de stock nuevo</h4><p style="color:var(--gray);font-size:15px">Abrís los bultos en vivo. Genera expectativa.</p></div>
-    <div class="card"><h4>🎁 Sorteo en vivo</h4><p style="color:var(--gray);font-size:15px">Seguime y comentá para participar. Sube seguidores.</p></div>
-    <div class="card"><h4>📸 Styling en vivo</h4><p style="color:var(--gray);font-size:15px">3 outfits con una prenda. Sube el ticket promedio.</p></div>
-    <div class="card"><h4>🏭 Detrás de escena</h4><p style="color:var(--gray);font-size:15px">Humaniza la marca. La gente compra a personas.</p></div>
-    <div class="card"><h4>🤝 Collab con otro local</h4><p style="color:var(--gray);font-size:15px">Duplicás audiencia compartiendo público.</p></div>
-    <div class="card"><h4>🔟 Top 10 del mes</h4><p style="color:var(--gray);font-size:15px">Los más vendidos. Fácil de armar.</p></div>
-    <div class="card"><h4>💬 Q&A de producto</h4><p style="color:var(--gray);font-size:15px">Posicionás tu expertise y resolvés dudas.</p></div>
-    <div class="card"><h4>🎯 Live temático</h4><p style="color:var(--gray);font-size:15px">"Todo para las fiestas", alineado al momento del año.</p></div>
-    <div class="card"><h4>💬 Mi cliente del mes</h4><p style="color:var(--gray);font-size:15px">Cliente invitado. Prueba social máxima.</p></div>
+    <div class="idea-card" onclick="openIdea('flash')"><span class="ic-emo">👗</span><h4>Liquidación flash</h4><span class="ic-more">Ver +</span></div>
+    <div class="idea-card" onclick="openIdea('unboxing')"><span class="ic-emo">📦</span><h4>Unboxing de stock nuevo</h4><span class="ic-more">Ver +</span></div>
+    <div class="idea-card" onclick="openIdea('sorteo')"><span class="ic-emo">🎁</span><h4>Sorteo en vivo</h4><span class="ic-more">Ver +</span></div>
+    <div class="idea-card" onclick="openIdea('styling')"><span class="ic-emo">📸</span><h4>Styling en vivo</h4><span class="ic-more">Ver +</span></div>
+    <div class="idea-card" onclick="openIdea('detras')"><span class="ic-emo">🏭</span><h4>Detrás de escena</h4><span class="ic-more">Ver +</span></div>
+    <div class="idea-card" onclick="openIdea('collab')"><span class="ic-emo">🤝</span><h4>Collab con otro local</h4><span class="ic-more">Ver +</span></div>
+    <div class="idea-card" onclick="openIdea('top10')"><span class="ic-emo">🔟</span><h4>Top 10 del mes</h4><span class="ic-more">Ver +</span></div>
+    <div class="idea-card" onclick="openIdea('qa')"><span class="ic-emo">💬</span><h4>Q&amp;A de producto</h4><span class="ic-more">Ver +</span></div>
+    <div class="idea-card" onclick="openIdea('tematico')"><span class="ic-emo">🎯</span><h4>Live temático</h4><span class="ic-more">Ver +</span></div>
+    <div class="idea-card" onclick="openIdea('cliente')"><span class="ic-emo">⭐</span><h4>Mi cliente del mes</h4><span class="ic-more">Ver +</span></div>
   </div>
   <div style="display:flex;gap:10px;margin-top:28px;margin-bottom:8px">
     <button class="btn" onclick="go('dashboard')" style="flex:1;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12)">🏠 Inicio</button>
@@ -2134,7 +2192,199 @@ Si te sacás una foto usándolo y nos etiquetás, te damos descuento en tu próx
 
   <div style="display:flex;gap:10px;margin-top:24px;margin-bottom:8px">
     <button class="btn" onclick="go('dashboard')" style="flex:1;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12)">🏠 Inicio</button>
-    <button id="complete-btn-bonus-pdf" class="btn btn-green" onclick="confirmComplete('bonus-pdf')" style="flex:2">🏆 Ver mi logro</button>
+    <button id="complete-btn-bonus-pdf" class="btn btn-green" onclick="confirmComplete('bonus-pdf')" style="flex:2">Continuar → Checklist Final 📋</button>
+  </div>
+</section>
+
+<!-- RECOMENDACIONES -->
+<section class="page" id="pg-recomendaciones">
+  <h1 class="ph">Recomendaciones 💡</h1>
+  <p class="psub">Trucos de los que más venden en vivo. Empezá por este.</p>
+
+  <div class="reco" style="background:linear-gradient(135deg,rgba(155,77,202,.22),rgba(0,212,170,.12))">
+    <div><h3 style="font-size:20px">🖥️ Usá una segunda pantalla para el chat</h3>
+    <p style="color:#f0f0ff;font-size:15px;margin-top:4px">El truco #1 para interactuar mejor y vender más en tus lives.</p></div>
+  </div>
+
+  <div class="alert alert-y"><span class="ae">⚠️</span><div>Desde el <b>celular que transmite</b> es incómodo leer el chat y casi imposible escribir. Si no ves los comentarios, <b>perdés ventas</b>.</div></div>
+
+  <!-- ILUSTRACIÓN SEGUNDA PANTALLA (estilo infografía) -->
+  <div style="position:relative;overflow:hidden;background:radial-gradient(120% 90% at 80% 15%,#1a0f2e 0%,#0c0814 55%,#080608 100%);border:1px solid var(--border);border-radius:18px;padding:22px 16px 20px;margin:16px 0 6px;box-shadow:0 18px 46px rgba(0,0,0,.5)">
+    <!-- aro de luz -->
+    <div style="position:absolute;top:-40px;right:-40px;width:180px;height:180px;border-radius:50%;border:10px solid rgba(255,255,255,.9);box-shadow:0 0 60px 10px rgba(200,180,255,.35),inset 0 0 30px rgba(200,180,255,.25);opacity:.55"></div>
+    <!-- logo -->
+    <div style="position:relative;display:flex;align-items:center;justify-content:center;gap:9px;margin-bottom:10px">
+      <svg width="26" height="26" viewBox="0 0 100 100"><defs><linearGradient id="rlr" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#00d4aa"/><stop offset="1" stop-color="#9B4DCA"/></linearGradient></defs><circle cx="50" cy="50" r="38" fill="none" stroke="url(#rlr)" stroke-width="9"/><circle cx="50" cy="50" r="11" fill="#ef4444"/></svg>
+      <span style="font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:15px;letter-spacing:1.5px;color:#fff">KIT <span style="color:#9B4DCA">LIVE</span> COMMERCE</span>
+    </div>
+    <!-- título -->
+    <div style="position:relative;text-align:center;font-family:'Barlow Condensed',sans-serif;font-weight:900;line-height:.92;letter-spacing:1px;font-size:clamp(28px,7vw,44px);margin-bottom:12px">
+      <span style="color:#fff">USÁ UNA</span><br><span style="color:#c084fc;text-shadow:0 0 22px rgba(192,132,252,.5)">SEGUNDA PANTALLA</span>
+    </div>
+    <!-- pill -->
+    <div style="position:relative;display:flex;justify-content:center;margin-bottom:20px">
+      <div style="display:inline-flex;align-items:center;gap:8px;border:1.5px solid rgba(155,77,202,.7);border-radius:30px;padding:7px 16px;background:rgba(155,77,202,.08);box-shadow:0 0 20px rgba(155,77,202,.25)">
+        <span style="font-size:14px">💬</span>
+        <span style="font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:13px;letter-spacing:.5px;color:#fff">MEJORÁ TU LIVE, <span style="color:#c084fc">INTERACTUÁ MÁS.</span></span>
+      </div>
+    </div>
+    <!-- dispositivos -->
+    <div style="position:relative;display:flex;gap:14px;align-items:flex-end;justify-content:center;flex-wrap:wrap">
+      <!-- laptop -->
+      <div style="width:min(400px,90%)">
+        <div style="background:#0b0b0d;border:1px solid #2a2a33;border-radius:10px 10px 3px 3px;padding:7px;display:flex;box-shadow:0 12px 30px rgba(0,0,0,.5)">
+          <!-- nav tiktok -->
+          <div style="width:74px;flex-shrink:0;padding:6px 4px;font-size:7px;color:#cfcfe0;line-height:1">
+            <div style="display:flex;align-items:center;gap:3px;font-weight:800;color:#fff;font-size:9px;margin-bottom:8px">♪ TikTok <span style="background:#FE2C55;color:#fff;font-size:6px;padding:1px 3px;border-radius:3px">LIVE</span></div>
+            <div style="display:flex;flex-direction:column;gap:6px;color:#a8a8ba">
+              <span>⌂ Para ti</span><span>👤 Siguiendo</span><span>◎ Explorar</span><span>👥 Amigos</span><span>⊕ Cargar</span><span>🔔 Actividad</span><span>✉ Mensajes</span><span>☰ Más</span>
+            </div>
+          </div>
+          <!-- video -->
+          <div style="flex:1;background:linear-gradient(160deg,#3a3040,#17131d);border-radius:4px;min-height:118px;position:relative;overflow:hidden">
+            <span style="position:absolute;top:5px;left:5px;background:#FE2C55;color:#fff;font-size:7px;font-weight:800;padding:1px 5px;border-radius:4px">● LIVE</span>
+            <span style="position:absolute;top:5px;right:5px;background:rgba(0,0,0,.5);color:#fff;font-size:7px;padding:1px 5px;border-radius:4px">👁 1.2K</span>
+            <div style="position:absolute;top:34%;left:50%;transform:translateX(-50%);text-align:center;color:#fff;background:rgba(0,0,0,.35);padding:4px 8px;border-radius:4px;white-space:nowrap">
+              <div style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:11px;letter-spacing:.5px">SOLO X HOY</div>
+              <div style="font-size:7px;opacity:.9">4 prendas en oferta</div>
+              <div style="font-size:7px;color:#00d4aa;font-weight:700">A PRECIO POR MAYOR</div>
+            </div>
+            <span style="position:absolute;bottom:6px;left:50%;transform:translateX(-50%);font-size:22px">🧍‍♀️</span>
+          </div>
+          <!-- chat -->
+          <div style="width:96px;flex-shrink:0;background:#0d0d10;border-left:1px solid #23232b;padding:6px;font-size:7px;color:#c8c8d4">
+            <div style="display:flex;justify-content:space-between;color:#fff;font-weight:700;font-size:7.5px;margin-bottom:6px">Chat en vivo <span style="color:#777">✕</span></div>
+            <div style="display:flex;flex-direction:column;gap:5px;line-height:1.15">
+              <div><b style="color:#8ab4ff">María_23</b><br>¿Hacés envíos a todo el país?</div>
+              <div><b style="color:#8ab4ff">Lucas.store</b><br>¿Cuánto cuesta el jean?</div>
+              <div><b style="color:#8ab4ff">Estilo_urban</b><br>Me encanta! 😍</div>
+              <div><b style="color:#8ab4ff">Sofi.ok</b><br>Quiero uno, ¿cómo hago?</div>
+              <div><b style="color:#8ab4ff">Dani_compras</b><br>Genial la calidad ❤️</div>
+            </div>
+            <div style="margin-top:6px;border-top:1px solid #23232b;padding-top:4px;color:#666">Añadir comentario… <span style="color:#FE2C55">❤</span></div>
+          </div>
+        </div>
+        <div style="height:7px;background:#141418;border-radius:0 0 9px 9px;margin:0 auto;width:78%"></div>
+        <div style="text-align:center;font-size:12px;color:var(--gray);margin-top:7px">💻 Notebook / 2ª pantalla — <b style="color:#c084fc">el chat en grande</b></div>
+      </div>
+      <!-- phone en soporte -->
+      <div style="text-align:center">
+        <div style="position:relative;display:inline-block">
+          <div style="width:84px;background:#000;border:4px solid #1c1c22;border-radius:16px;padding:4px;box-shadow:0 12px 26px rgba(0,0,0,.5)">
+            <div style="background:linear-gradient(160deg,#3a3040,#17131d);border-radius:11px;min-height:150px;position:relative;overflow:hidden">
+              <span style="position:absolute;top:5px;left:5px;background:#FE2C55;color:#fff;font-size:6px;font-weight:800;padding:1px 4px;border-radius:3px">● LIVE</span>
+              <span style="position:absolute;top:5px;right:5px;color:#fff;font-size:6px">👁 1.2K</span>
+              <div style="position:absolute;top:30%;left:50%;transform:translateX(-50%);text-align:center;color:#fff;background:rgba(0,0,0,.35);padding:2px 5px;border-radius:3px;white-space:nowrap">
+                <div style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:8px">SOLO X HOY</div>
+                <div style="font-size:5.5px;color:#00d4aa">A PRECIO POR MAYOR</div>
+              </div>
+              <span style="position:absolute;bottom:4px;left:50%;transform:translateX(-50%);font-size:18px">🧍‍♀️</span>
+              <div style="position:absolute;right:4px;bottom:6px;display:flex;flex-direction:column;gap:3px;font-size:9px">❤️<span>❤️</span><span>❤️</span></div>
+            </div>
+          </div>
+          <div style="width:10px;height:22px;background:#1c1c22;margin:0 auto"></div>
+          <div style="width:42px;height:7px;background:#1c1c22;border-radius:0 0 8px 8px;margin:0 auto"></div>
+        </div>
+        <div style="font-size:12px;color:var(--gray);margin-top:6px">📱 Celular del kit<br><span style="font-size:11px">(solo transmite)</span></div>
+      </div>
+    </div>
+    <!-- 3 beneficios -->
+    <div style="position:relative;display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:20px;padding-top:16px;border-top:1px solid rgba(155,77,202,.2)">
+      <div style="flex:1;min-width:96px;text-align:center"><div style="font-size:22px">👁️</div><div style="font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:14px;color:#c084fc;letter-spacing:.5px">VÉ EL CHAT</div><div style="font-size:11px;color:var(--gray)">sin distraerte.</div></div>
+      <div style="flex:1;min-width:96px;text-align:center"><div style="font-size:22px">💬</div><div style="font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:14px;color:#c084fc;letter-spacing:.5px">RESPONDÉ MEJOR</div><div style="font-size:11px;color:var(--gray)">y conectá en vivo.</div></div>
+      <div style="flex:1;min-width:96px;text-align:center"><div style="font-size:22px">📈</div><div style="font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:14px;color:#c084fc;letter-spacing:.5px">MÁS INTERACCIÓN</div><div style="font-size:11px;color:var(--gray)">más ventas.</div></div>
+    </div>
+  </div>
+
+  <h3 class="sec-h">Cómo se hace</h3>
+  <div class="step"><div class="num">1</div><div><h4>Abrí tu propio LIVE en otra pantalla</h4><p>Entrá a tu transmisión desde una <b>notebook</b> (tiktok.com) o un <b>segundo celular</b>. Vas a ver los comentarios en grande.</p></div></div>
+  <div class="step"><div class="num">2</div><div><h4>El celular del kit solo transmite</h4><p>Queda fijo en el trípode grabando. La segunda pantalla es tu <b>centro de control</b> para leer y responder.</p></div></div>
+  <div class="step"><div class="num">3</div><div><h4>Leé nombres y respondé al toque</h4><p>Con el chat a la vista, saludás por nombre y contestás precios/talles al instante. Eso activa el algoritmo.</p><div class="tip">💡 "Ana, el talle M lo tengo, te lo separo" cierra ventas en vivo.</div></div></div>
+
+  <h3 class="sec-h">Por qué te conviene</h3>
+  <div class="grid2">
+    <div class="card"><h4 style="font-size:16px">👀 Ves todo el chat</h4><p style="color:var(--gray);font-size:15px;margin-top:4px">Nada de comentarios que se te escapan.</p></div>
+    <div class="card"><h4 style="font-size:16px">⚡ Respondés al instante</h4><p style="color:var(--gray);font-size:15px;margin-top:4px">Sin frenar el live ni perder el hilo.</p></div>
+    <div class="card"><h4 style="font-size:16px">💰 No perdés ventas</h4><p style="color:var(--gray);font-size:15px;margin-top:4px">Cada pregunta respondida es una venta más cerca.</p></div>
+    <div class="card"><h4 style="font-size:16px">✨ Se ve profesional</h4><p style="color:var(--gray);font-size:15px;margin-top:4px">Atención rápida = confianza = más compras.</p></div>
+  </div>
+
+  <h3 class="sec-h">Otras recomendaciones rápidas</h3>
+  <div class="grid2">
+    <div class="card"><h4 style="font-size:16px">🔋 Cargador siempre conectado</h4><p style="color:var(--gray);font-size:15px;margin-top:4px">Un live largo consume batería. Nunca transmitas sin cable.</p></div>
+    <div class="card"><h4 style="font-size:16px">🧍 Sumá un ayudante</h4><p style="color:var(--gray);font-size:15px;margin-top:4px">Uno vende, otro responde WhatsApp y separa productos.</p></div>
+    <div class="card"><h4 style="font-size:16px">🧺 Productos ordenados y a mano</h4><p style="color:var(--gray);font-size:15px;margin-top:4px">Sin cortes ni "esperá que lo busco".</p></div>
+    <div class="card"><h4 style="font-size:16px">📶 Internet estable</h4><p style="color:var(--gray);font-size:15px;margin-top:4px">WiFi bueno o datos con buena señal. Un live cortado = gente que se va.</p></div>
+  </div>
+
+  <h3 class="sec-h">Transmití desde el día 1 (aunque te falten funciones)</h3>
+  <div class="reco" style="background:linear-gradient(135deg,rgba(155,77,202,.22),rgba(0,212,170,.12));margin-bottom:8px">
+    <div><h3 style="font-size:19px">🔓 TikTok desbloquea funciones con tu experiencia en LIVE</h3>
+    <p style="color:#f0f0ff;font-size:15px;margin-top:4px">Los <b>stickers y carteles en pantalla</b> (con el nombre y la info de tu negocio), más espectadores y las herramientas de <b>monetización</b> se habilitan a medida que hacés lives. No están todas desde el principio: te las vas ganando.</p></div>
+  </div>
+
+  <!-- INFOGRAFÍA "Continuá tu progreso LIVE" (recreada del diseño) -->
+  <div style="position:relative;background:linear-gradient(160deg,#f3eefb,#e9e4f5);border-radius:20px;padding:20px 18px;margin:10px 0 6px;box-shadow:0 16px 40px rgba(120,60,200,.25)">
+    <!-- header -->
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+      <div style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:clamp(20px,5vw,26px);color:#15111c;line-height:1.05">Continuá tu progreso <span style="color:#9B4DCA">LIVE</span></div>
+      <div style="width:30px;height:30px;flex-shrink:0;border:2px solid #9B4DCA;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#9B4DCA;font-weight:800">?</div>
+    </div>
+    <div style="color:#6b6577;font-size:15px;margin:2px 0 14px">Un paso más y podrás:</div>
+    <!-- 3 tarjetas -->
+    <div style="display:flex;gap:9px;flex-wrap:wrap">
+      <div style="flex:1;min-width:90px;background:rgba(255,255,255,.6);border-radius:14px;padding:14px 12px"><div style="font-size:26px;margin-bottom:6px">👥</div><div style="color:#2a2434;font-size:14px;line-height:1.25">Conseguir <b style="color:#9B4DCA">más</b> espectadores</div></div>
+      <div style="flex:1;min-width:90px;background:rgba(255,255,255,.6);border-radius:14px;padding:14px 12px"><div style="font-size:26px;margin-bottom:6px">💰</div><div style="color:#2a2434;font-size:14px;line-height:1.25">Desbloquear herramientas de <b style="color:#9B4DCA">monetización</b></div></div>
+      <div style="flex:1;min-width:90px;background:rgba(255,255,255,.6);border-radius:14px;padding:14px 12px"><div style="font-size:26px;margin-bottom:6px">📣</div><div style="color:#2a2434;font-size:14px;line-height:1.25">Acceder a <b style="color:#9B4DCA">más</b> funciones</div></div>
+    </div>
+    <div style="height:1px;background:rgba(120,80,180,.2);margin:16px 0"></div>
+    <!-- requisitos -->
+    <div style="font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:18px;color:#15111c;margin-bottom:12px">Iniciá <span style="color:#9B4DCA">LIVE</span> para conocer las funciones</div>
+    <div style="background:rgba(255,255,255,.55);border-radius:14px;padding:14px 14px">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px"><span style="font-size:18px">⏱️</span><span style="flex:1;color:#2a2434;font-size:14px">Iniciá LIVE durante 30 minutos</span><span style="font-weight:800;color:#9B4DCA">6/30</span></div>
+      <div style="height:8px;background:rgba(120,80,180,.15);border-radius:20px;overflow:hidden;margin-bottom:14px"><div style="width:20%;height:100%;background:#9B4DCA;border-radius:20px"></div></div>
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px"><span style="font-size:18px">🗓️</span><span style="flex:1;color:#2a2434;font-size:14px">Iniciá LIVE en 3 días diferentes</span><span style="font-weight:800;color:#9B4DCA">1/3</span></div>
+      <div style="height:8px;background:rgba(120,80,180,.15);border-radius:20px;overflow:hidden"><div style="width:33%;height:100%;background:#9B4DCA;border-radius:20px"></div></div>
+    </div>
+    <!-- estrella -->
+    <div style="display:flex;align-items:center;gap:12px;margin-top:16px">
+      <div style="width:44px;height:44px;flex-shrink:0;border:2px solid #9B4DCA;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;box-shadow:0 0 16px rgba(155,77,202,.4)">⭐</div>
+      <div style="color:#2a2434;font-size:14.5px;line-height:1.3"><b style="color:#9B4DCA">¡Cada LIVE te acerca a más herramientas</b> y a hacer crecer tu negocio!</div>
+    </div>
+  </div>
+  <p style="color:var(--gray);font-size:12.5px;margin:8px 0 4px">☝️ Así se ve dentro de TikTok, en <b>“Continuá tu progreso LIVE”</b>. Los números son un ejemplo: cada cuenta tiene sus propios objetivos.</p>
+
+  <div class="alert alert-i" style="border-color:var(--teal);background:rgba(0,212,170,.08);margin-top:10px"><span class="ae">⭐</span><div><b>El consejo:</b> aunque todavía no tengas todas las herramientas desbloqueadas, empezá a transmitir <b>desde el primer día</b>. TikTok habilita nuevas funciones a medida que ganás experiencia en LIVE. Cuanto más transmitís y mantenés una <b>actividad constante</b>, más opciones vas a tener para mejorar tus ventas y la interacción con tu audiencia. <b>Cada LIVE te acerca a más herramientas.</b></div></div>
+
+  <h3 class="sec-h">💡 Recomendaciones PRO</h3>
+  <p style="color:var(--gray);font-size:15px;margin:-6px 0 4px">Consejos que normalmente solo aprenden quienes hacen Live Commerce todos los días.</p>
+  <p style="color:var(--violet-glow);font-size:13px;margin:0 0 12px;font-weight:600">👆 Tocá cada punto para ver el detalle.</p>
+  <div style="display:flex;flex-direction:column;gap:9px">
+    <div class="idea-card" onclick="openPro('p1')"><span class="pro-num">1</span><h4>Nunca empieces el LIVE vendiendo</h4><span class="ic-more">Ver +</span></div>
+    <div class="idea-card" onclick="openPro('p2')"><span class="pro-num">2</span><h4>Saludá a cada persona que entra</h4><span class="ic-more">Ver +</span></div>
+    <div class="idea-card" onclick="openPro('p3')"><span class="pro-num">3</span><h4>Respondé el chat constantemente</h4><span class="ic-more">Ver +</span></div>
+    <div class="idea-card" onclick="openPro('p4')"><span class="pro-num">4</span><h4>Nunca dejes silencios</h4><span class="ic-more">Ver +</span></div>
+    <div class="idea-card" onclick="openPro('p5')"><span class="pro-num">5</span><h4>Mostrá el producto desde varios ángulos</h4><span class="ic-more">Ver +</span></div>
+    <div class="idea-card" onclick="openPro('p6')"><span class="pro-num">6</span><h4>Hacé preguntas</h4><span class="ic-more">Ver +</span></div>
+    <div class="idea-card" onclick="openPro('p7')"><span class="pro-num">7</span><h4>No transmitas con poca batería</h4><span class="ic-more">Ver +</span></div>
+    <div class="idea-card" onclick="openPro('p8')"><span class="pro-num">8</span><h4>Tené otra pantalla</h4><span class="ic-more">Ver +</span></div>
+    <div class="idea-card" onclick="openPro('p9')"><span class="pro-num">9</span><h4>Prepará los productos antes</h4><span class="ic-more">Ver +</span></div>
+    <div class="idea-card" onclick="openPro('p10')"><span class="pro-num">10</span><h4>Tené agua a mano</h4><span class="ic-more">Ver +</span></div>
+    <div class="idea-card" onclick="openPro('p11')"><span class="pro-num">11</span><h4>Mirá la cámara, no la pantalla</h4><span class="ic-more">Ver +</span></div>
+    <div class="idea-card" onclick="openPro('p12')"><span class="pro-num">12</span><h4>Cambiá de producto cada pocos minutos</h4><span class="ic-more">Ver +</span></div>
+    <div class="idea-card" onclick="openPro('p13')"><span class="pro-num">13</span><h4>Repetí la información importante</h4><span class="ic-more">Ver +</span></div>
+    <div class="idea-card" onclick="openPro('p14')"><span class="pro-num">14</span><h4>No esperes tener 100 personas</h4><span class="ic-more">Ver +</span></div>
+    <div class="idea-card" onclick="openPro('p15')"><span class="pro-num">15</span><h4>La primera hora vale oro</h4><span class="ic-more">Ver +</span></div>
+    <div class="idea-card" onclick="openPro('p16')"><span class="pro-num">16</span><h4>Los primeros 5 segundos son todo</h4><span class="ic-more">Ver +</span></div>
+    <div class="idea-card" onclick="openPro('p17')"><span class="pro-num">17</span><h4>La iluminación vende</h4><span class="ic-more">Ver +</span></div>
+    <div class="idea-card" onclick="openPro('p18')"><span class="pro-num">18</span><h4>No mires el contador de espectadores</h4><span class="ic-more">Ver +</span></div>
+    <div class="idea-card" onclick="openPro('p19')"><span class="pro-num">19</span><h4>Terminá con un anuncio</h4><span class="ic-more">Ver +</span></div>
+    <div class="idea-card" onclick="openPro('p20')" style="border-color:var(--violet);background:linear-gradient(135deg,rgba(155,77,202,.18),rgba(0,212,170,.08))"><span class="pro-num" style="background:linear-gradient(135deg,#00d4aa,#9B4DCA)">20</span><h4>La regla más importante del Live Commerce ⭐</h4><span class="ic-more">Ver +</span></div>
+  </div>
+
+  <div style="display:flex;gap:10px;margin-top:28px;margin-bottom:8px">
+    <button class="btn" onclick="go('dashboard')" style="flex:1;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12)">🏠 Inicio</button>
+    <button id="complete-btn-recomendaciones" class="btn btn-green" onclick="confirmComplete('recomendaciones')" style="flex:2">Continuar →</button>
   </div>
 </section>
 
@@ -2175,6 +2425,28 @@ Si te sacás una foto usándolo y nos etiquetás, te damos descuento en tu próx
   <div class="alert alert-i" style="margin-top:10px"><span class="ae">💬</span><div>¿No encontraste tu respuesta? Escribinos a <b>+54 9 2614 19-6629</b> o a <b>@magency.ar</b> y te ayudamos.</div></div>
   <div style="display:flex;gap:10px;margin-top:22px;margin-bottom:8px">
     <button class="btn" onclick="go('dashboard')" style="flex:1;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12)">🏠 Inicio</button>
+  </div>
+</section>
+
+<!-- CHECKLIST FINAL -->
+<section class="page" id="pg-checklist-final">
+  <h1 class="ph">Checklist Final 📋</h1>
+  <p class="psub">Antes de terminar, repasá lo que aprendiste. Marcá cada punto que entendiste y podés aplicar.</p>
+  <div class="alert alert-y"><span class="ae">⚠️</span><div>Marcá con sinceridad. Cuando completes <b>todos</b> los puntos, se desbloquea el <b>Final del curso</b> 🎓.</div></div>
+
+  <div style="background:var(--black2);border:1px solid var(--border);border-radius:14px;padding:14px 16px;margin:12px 0;display:flex;align-items:center;gap:12px">
+    <div style="font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:16px;color:#fff;white-space:nowrap">Tu avance</div>
+    <div style="flex:1;height:10px;background:rgba(255,255,255,.08);border-radius:20px;overflow:hidden"><div id="final-chk-fill" style="width:0%;height:100%;background:linear-gradient(90deg,#9B4DCA,#00d4aa);border-radius:20px;transition:width .3s"></div></div>
+    <div id="final-chk-count" style="font-family:'Barlow Condensed',sans-serif;font-weight:800;color:var(--violet-glow);white-space:nowrap">0/0</div>
+  </div>
+
+  <div id="finalChkList" style="display:flex;flex-direction:column;gap:9px"></div>
+
+  <div class="alert alert-i" id="final-chk-msg" style="border-color:var(--teal);background:rgba(0,212,170,.08);margin-top:14px;display:none"><span class="ae">🎉</span><div><b>¡Completaste el checklist!</b> Ya desbloqueaste el Final del curso. Tocá el botón para ver tu graduación y tu certificado.</div></div>
+
+  <div style="display:flex;gap:10px;margin-top:22px;margin-bottom:8px">
+    <button class="btn" onclick="go('dashboard')" style="flex:1;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12)">🏠 Inicio</button>
+    <button id="final-chk-go" class="btn btn-green" onclick="goFinalFromChecklist()" style="flex:2;opacity:.45;pointer-events:none">🎓 Finalizar el curso →</button>
   </div>
 </section>
 
@@ -2277,6 +2549,51 @@ Si te sacás una foto usándolo y nos etiquetás, te damos descuento en tu próx
 /* checklists generados tras inyectar PAGES */
 const CHECK_ITEMS=['Perfil completo','Kit armado','Batería al 100%','WiFi estable','Productos listos a mano','Guión a la vista','Fondo limpio','Audio probado','Imagen probada','Título del live pensado','Avisé a mis clientes','Alguien mirando desde otro celular'];
 const PLAN_ITEMS=['ANTES · Perfil completo','ANTES · Kit armado','ANTES · Avisé 24hs','ANTES · Guión impreso','ANTES · Celular cargado','DURANTE · Hook (no "hola")','DURANTE · CTA cada 5 min','DURANTE · Leí nombres','DESPUÉS · Respondí mensajes','DESPUÉS · Agendé próximo live'];
+// Un punto por cada tema del curso (mismo total que las lecciones)
+const FINAL_CHECK_ITEMS=[
+ 'Sé cómo funciona TikTok en Argentina y por qué conviene para vender.',
+ 'Sé crear y configurar mi cuenta de TikTok.',
+ 'Sé armar el kit: luz, trípodes y micrófonos.',
+ 'Sé hacer el checklist pre-live antes de transmitir.',
+ 'Entiendo la estructura de un buen LIVE.',
+ 'Sé usar los guiones listos para vender.',
+ 'Conozco frases que me ayudan a vender.',
+ 'Sé cómo cerrar una venta en vivo.',
+ 'Sé escribir mensajes de WhatsApp que llaman la atención.',
+ 'Me siento listo/a para hacer mi primer LIVE.',
+ 'Sé configurar las funciones de TikTok para el LIVE.',
+ 'Entiendo cómo escalar mis ventas en vivo.',
+ 'Entiendo cómo funciona el algoritmo de TikTok.',
+ 'Sé hacer videos que atraen público.',
+ 'Sé usar tendencias y hashtags.',
+ 'Sé armar un calendario de contenido.',
+ 'Sé leer mis números y estadísticas.',
+ 'Entiendo cómo escalar con anuncios más adelante.',
+ 'Tengo ideas de lives para no quedarme sin contenido.',
+ 'Conozco los errores fatales que debo evitar.',
+ 'Tengo claro mi plan de 7 días.',
+ 'Sé que tengo la biblioteca de 349 guiones para usar en vivo.'
+];
+function finalChkTotal(){return (typeof FINAL_CHECK_ITEMS!=='undefined')?FINAL_CHECK_ITEMS.length:0;}
+function finalChkCount(){try{return JSON.parse(LS.get('klc_final_chk')||'[]').length;}catch(e){return 0;}}
+function finalChecklistDone(){var t=finalChkTotal();return t>0 && finalChkCount()>=t;}
+function updateFinalChecklist(){
+  var list=document.getElementById('finalChkList');
+  if(list && !list.children.length && typeof FINAL_CHECK_ITEMS!=='undefined'){
+    list.innerHTML=FINAL_CHECK_ITEMS.map(function(t){return '<div class="chk" data-ck="klc_final_chk" onclick="toggleChk(this,\'klc_final_chk\')"><span class="box"><svg viewBox="0 0 24 24"><path d="M4 12l5 5L20 6"/></svg></span><span>'+t+'</span></div>';}).join('');
+    if(typeof restoreChk==='function')restoreChk();
+  }
+  var t=finalChkTotal(), c=Math.min(finalChkCount(),t);
+  var cnt=document.getElementById('final-chk-count'); if(cnt)cnt.textContent=c+'/'+t;
+  var fill=document.getElementById('final-chk-fill'); if(fill)fill.style.width=(t?Math.round(c/t*100):0)+'%';
+  var done=finalChecklistDone();
+  var btn=document.getElementById('final-chk-go'); if(btn){btn.style.opacity=done?'1':'.45';btn.style.pointerEvents=done?'auto':'none';}
+  var msg=document.getElementById('final-chk-msg'); if(msg)msg.style.display=done?'flex':'none';
+  if(typeof updateProgress==='function')updateProgress();
+}
+function goChecklistFinal(){closeMenu();if(!(typeof courseCompleted==='function'&&courseCompleted())){showLockedToast('bonus-pdf');return;}go('checklist-final');updateFinalChecklist();}
+function goFinalFromChecklist(){if(finalChecklistDone())showGraduation();else showFinalChkToast();}
+function showFinalChkToast(){var t=document.createElement('div');t.innerHTML='📋 Completá <b>todos</b> los puntos del checklist para desbloquear el final';t.style.cssText='position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:#1a1a1a;border:1px solid rgba(155,77,202,.5);color:#c084fc;padding:10px 20px;border-radius:30px;font-size:13px;z-index:9999;box-shadow:0 4px 20px rgba(0,0,0,.5)';document.body.appendChild(t);setTimeout(()=>t.remove(),3000);}
 const _origBuild=buildPages;
 buildPages=function(){
   _origBuild();
@@ -2284,12 +2601,15 @@ buildPages=function(){
   if(chk)chk.innerHTML=CHECK_ITEMS.map(t=>'<div class="chk" data-ck="klc_checklist" onclick="toggleChk(this,\'klc_checklist\')"><span class="box"><svg viewBox="0 0 24 24"><path d="M4 12l5 5L20 6"/></svg></span><span>'+t+'</span></div>').join('');
   const pc=document.getElementById('planChk');
   if(pc)pc.innerHTML=PLAN_ITEMS.map(t=>'<div class="chk" data-ck="klc_plan_chk" onclick="toggleChk(this,\'klc_plan_chk\')"><span class="box"><svg viewBox="0 0 24 24"><path d="M4 12l5 5L20 6"/></svg></span><span>'+t+'</span></div>').join('');
+  const fchk=document.getElementById('finalChkList');
+  if(fchk)fchk.innerHTML=FINAL_CHECK_ITEMS.map(t=>'<div class="chk" data-ck="klc_final_chk" onclick="toggleChk(this,\'klc_final_chk\')"><span class="box"><svg viewBox="0 0 24 24"><path d="M4 12l5 5L20 6"/></svg></span><span>'+t+'</span></div>').join('');
   restoreChk();
+  updateFinalChecklist();
   updateProgress();
-  const COURSE_ORDER_LOCAL=['m1-tiktok','m1-cuenta','m1-kit','m1-checklist','m2-estructura','m2-guion','m2-frases','m3-cerrar','m3-whatsapp','m3-primer-live','m3-config','m3-escalar','m4-algoritmo','m4-videos','m4-tendencias','m4-calendario','m4-metricas','m4-ads','bonus-ideas','bonus-errores','bonus-plan','bonus-pdf'];
+  const COURSE_ORDER_LOCAL=['m1-tiktok','m1-cuenta','m1-kit','m1-checklist','m2-estructura','m2-guion','m2-frases','m3-cerrar','m3-whatsapp','m3-primer-live','m3-config','m3-escalar','m4-algoritmo','m4-videos','m4-tendencias','m4-calendario','m4-metricas','m4-ads','bonus-ideas','bonus-errores','bonus-plan','recomendaciones','bonus-pdf'];
   COURSE_ORDER_LOCAL.forEach(p=>renderCompleteBtn(p));
-  // Si el curso ya estaba completado, ir directo a graduación
-  if(getCompleted().length>=TOTAL_PAGES){
+  // Si el curso y el checklist final ya estaban completos, ir directo a graduación
+  if(getCompleted().length>=TOTAL_PAGES && finalChecklistDone()){
     setTimeout(showGraduation,300);
   }
 };
@@ -2405,6 +2725,200 @@ async function generateCertificate(){
     if(hint)hint.textContent='¡Listo! Revisá tu carpeta de descargas.';
   }catch(e){ if(hint)hint.textContent='No se pudo generar. Revisá tu conexión e intentá de nuevo.'; }
   if(btn){btn.disabled=false;btn.style.opacity='1';btn.textContent=(LS.get('klc_cert_name')?'⬇️ Descargar de nuevo':orig);}
+}
+</script>
+
+<!-- LÓGICA IDEAS DE LIVES -->
+<script>
+const IDEAS={
+ flash:{emo:'👗',title:'Liquidación flash',html:`
+  <div class="lbl">Qué es</div><p>Ofertas por tiempo limitado que valen <b>solo durante el live</b> (ideal 60 min).</p>
+  <div class="lbl">Por qué funciona</div><p>La urgencia real dispara la conversión. El "solo hoy" hace que decidan en el momento en vez de dejarlo para después.</p>
+  <div class="lbl">Cómo hacerlo</div><ol><li>Elegí 4 a 6 productos con precio especial.</li><li>Mostrá el precio de lista tachado vs. el de hoy.</li><li>Repetí que el precio vuelve a normal cuando termina el vivo.</li></ol>
+  <div class="lbl">Frase para arrancar</div><div class="idea-guion">"Ojo que este precio es SOLO en el vivo. Cuando cortemos, vuelve a valor de lista."</div>`},
+ unboxing:{emo:'📦',title:'Unboxing de stock nuevo',html:`
+  <div class="lbl">Qué es</div><p>Abrís las cajas de mercadería nueva <b>en vivo</b>, sin haberla mostrado antes.</p>
+  <div class="lbl">Por qué funciona</div><p>Genera expectativa y sensación de primicia. La gente quiere ser la primera en verlo (y en reservarlo).</p>
+  <div class="lbl">Cómo hacerlo</div><ol><li>No muestres el stock antes del live.</li><li>Abrí bulto por bulto reaccionando en el momento.</li><li>Ofrecé reservar lo que va saliendo.</li></ol>
+  <div class="lbl">Frase para arrancar</div><div class="idea-guion">"No lo vi todavía, lo abrimos juntos. Si te gusta algo, escribí 'lo quiero' y te lo separo."</div>`},
+ sorteo:{emo:'🎁',title:'Sorteo en vivo',html:`
+  <div class="lbl">Qué es</div><p>Regalás un producto entre quienes participan durante la transmisión.</p>
+  <div class="lbl">Por qué funciona</div><p>Sube seguidores, comentarios y tiempo de permanencia — justo lo que premia el algoritmo de TikTok.</p>
+  <div class="lbl">Cómo hacerlo</div><ol><li>Regla clara: seguir + comentar.</li><li>Anunciá el ganador AL FINAL para que se queden todo el live.</li><li>Pedí que compartan la transmisión.</li></ol>
+  <div class="lbl">Frase para arrancar</div><div class="idea-guion">"Para el sorteo: seguime y comentá 🎁. El ganador lo digo al final, así que quedate."</div>`},
+ styling:{emo:'📸',title:'Styling en vivo',html:`
+  <div class="lbl">Qué es</div><p>Armás 3 looks distintos usando una misma prenda estrella.</p>
+  <div class="lbl">Por qué funciona</div><p>Muestra versatilidad y sube el ticket promedio, porque terminás vendiendo combos y no una sola prenda.</p>
+  <div class="lbl">Cómo hacerlo</div><ol><li>Elegí una prenda base (un jean, una camisa).</li><li>Combinala con 3 opciones diferentes.</li><li>Ofrecé el combo completo con precio especial.</li></ol>
+  <div class="lbl">Frase para arrancar</div><div class="idea-guion">"Con este jean te armo 3 outfits. Si te llevás el combo, te hago precio."</div>`},
+ detras:{emo:'🏭',title:'Detrás de escena',html:`
+  <div class="lbl">Qué es</div><p>Mostrás cómo trabajás: el depósito, el armado de pedidos, tu día a día.</p>
+  <div class="lbl">Por qué funciona</div><p>Humaniza la marca. La gente compra a personas, no a logos. Genera cercanía y confianza.</p>
+  <div class="lbl">Cómo hacerlo</div><ol><li>Mostrá tu espacio real, sin filtro.</li><li>Contá una anécdota del negocio.</li><li>Presentá al equipo o a vos mismo.</li></ol>
+  <div class="lbl">Frase para arrancar</div><div class="idea-guion">"Te muestro cómo preparo los pedidos que salen hoy. Somos chiquitos y le ponemos todo."</div>`},
+ collab:{emo:'🤝',title:'Collab con otro local',html:`
+  <div class="lbl">Qué es</div><p>Hacés un live junto a otra tienda que complementa lo tuyo.</p>
+  <div class="lbl">Por qué funciona</div><p>Duplicás la audiencia: cada uno lleva a sus seguidores al mismo vivo.</p>
+  <div class="lbl">Cómo hacerlo</div><ol><li>Buscá un rubro que combine, no competencia directa.</li><li>Definan una promo conjunta.</li><li>Anúncienlo desde las dos cuentas antes del live.</li></ol>
+  <div class="lbl">Frase para arrancar</div><div class="idea-guion">"Hoy estoy con @otrolocal, así que hay doble sorteo y promo combinada."</div>`},
+ top10:{emo:'🔟',title:'Top 10 del mes',html:`
+  <div class="lbl">Qué es</div><p>Repasás los 10 productos más vendidos del mes, tipo ranking.</p>
+  <div class="lbl">Por qué funciona</div><p>Prueba social: "si todos lo compran, algo bueno tiene". Además es facilísimo de armar.</p>
+  <div class="lbl">Cómo hacerlo</div><ol><li>Ordená del puesto 10 al 1 para generar suspenso.</li><li>Contá por qué se vende tanto cada uno.</li><li>Ofrecé reponer los que estén agotados.</li></ol>
+  <div class="lbl">Frase para arrancar</div><div class="idea-guion">"Arrancamos el ranking. En el puesto 10... ¿adiviná cuál fue el más vendido?"</div>`},
+ qa:{emo:'💬',title:'Q&A de producto',html:`
+  <div class="lbl">Qué es</div><p>Respondés en vivo las dudas de la gente sobre tus productos.</p>
+  <div class="lbl">Por qué funciona</div><p>Posiciona tu expertise y elimina las objeciones de compra en el momento, sin que se vayan con la duda.</p>
+  <div class="lbl">Cómo hacerlo</div><ol><li>Pedí preguntas apenas arrancás.</li><li>Tené los productos a mano para mostrarlos.</li><li>Cerrá cada respuesta con un llamado a la acción.</li></ol>
+  <div class="lbl">Frase para arrancar</div><div class="idea-guion">"Tirame todas tus dudas de talle, tela y envíos. Las respondo una por una."</div>`},
+ tematico:{emo:'🎯',title:'Live temático',html:`
+  <div class="lbl">Qué es</div><p>Un live con un eje del momento: "Todo para las fiestas", "Vuelta al cole", "Día de la madre".</p>
+  <div class="lbl">Por qué funciona</div><p>Se alinea con lo que la gente ya está buscando y comprando en esa fecha.</p>
+  <div class="lbl">Cómo hacerlo</div><ol><li>Elegí la fecha o el tema.</li><li>Seleccioná los productos acordes.</li><li>Ponele un nombre y una estética distinta al live.</li></ol>
+  <div class="lbl">Frase para arrancar</div><div class="idea-guion">"Live especial FIESTAS: todo lo que necesitás para brillar en fin de año."</div>`},
+ cliente:{emo:'⭐',title:'Mi cliente del mes',html:`
+  <div class="lbl">Qué es</div><p>Invitás a un cliente real a que cuente su experiencia en el vivo.</p>
+  <div class="lbl">Por qué funciona</div><p>Prueba social máxima. Un testimonio real vende más que cualquier discurso tuyo.</p>
+  <div class="lbl">Cómo hacerlo</div><ol><li>Elegí un cliente activo y contento.</li><li>Preguntale cómo usa el producto y qué le gustó.</li><li>Ofrecé un beneficio a quien participe como invitado.</li></ol>
+  <div class="lbl">Frase para arrancar</div><div class="idea-guion">"Hoy nos acompaña Caro, clienta desde el primer live. Contales qué te llevaste."</div>`}
+};
+function openIdea(k){var d=IDEAS[k];if(!d)return;
+  document.getElementById('ideaEmo').textContent=d.emo;
+  document.getElementById('ideaTitle').textContent=d.title;
+  document.getElementById('ideaBody').innerHTML=d.html;
+  var m=document.getElementById('ideaModal');m.classList.add('show');
+  var s=m.querySelector('.idea-sheet');if(s)s.scrollTop=0;
+  document.body.style.overflow='hidden';
+}
+function closeIdea(){var m=document.getElementById('ideaModal');if(m)m.classList.remove('show');document.body.style.overflow='';}
+document.addEventListener('keydown',function(e){if(e.key==='Escape')closeIdea();});
+
+/* ── Recomendaciones PRO ── */
+const PRO={
+ p1:{n:'1',title:'Nunca empieces el LIVE vendiendo',html:`
+  <p>Los primeros 2 o 3 minutos son para <b>generar audiencia</b>, no para vender. Enganchá primero, vendé después.</p>
+  <div class="idea-dd idea-no">❌ "Este producto vale..."</div>
+  <div class="idea-dd idea-si">✅ "Hoy les voy a mostrar algo que normalmente no mostramos."</div>`},
+ p2:{n:'2',title:'Saludá a cada persona que entra',html:`
+  <p>TikTok detecta la interacción y te muestra a más gente. Saludar por nombre aumenta el <b>tiempo de permanencia</b>.</p>
+  <div class="idea-guion">"Hola Martín, bienvenido." · "Gracias por entrar."</div>`},
+ p3:{n:'3',title:'Respondé el chat constantemente',html:`
+  <p>Cada comentario es una oportunidad, <b>aunque esa persona no compre</b>. No respondas con una palabra: explicá.</p>
+  <div class="idea-guion">Preguntan: "¿Hacen envíos?" → No digas solo "sí". Explicá cómo, a dónde y en cuánto tiempo. <b>Eso genera confianza.</b></div>`},
+ p4:{n:'4',title:'Nunca dejes silencios',html:`
+  <p>Si pasan más de <b>10 segundos</b> sin que hables, la gente abandona. El silencio mata el live.</p>
+  <p style="margin-top:8px">Siempre comentá algo: contá, describí, preguntá. Mantené el ritmo constante.</p>`},
+ p5:{n:'5',title:'Mostrá el producto desde varios ángulos',html:`
+  <p>No lo tengas quieto frente a la cámara. El movimiento retiene la atención.</p>
+  <p style="margin-top:8px">Giralo · Acercalo · Mostrá los detalles · Comparalo con otro. Hacé que se vea desde todos lados.</p>`},
+ p6:{n:'6',title:'Hacé preguntas',html:`
+  <p>No des un monólogo. Preguntar activa el chat, y mientras más comentarios, <b>más difusión</b> te da TikTok.</p>
+  <div class="idea-guion">"¿Qué color elegirían?" · "¿Quién usaría este producto?"</div>`},
+ p7:{n:'7',title:'No transmitas con poca batería',html:`
+  <p>Parece obvio, pero pasa muchísimo. Un live que se corta es audiencia que perdés y no vuelve.</p>
+  <p style="margin-top:8px">Antes de arrancar, chequeá: ✔ Celular cargando · ✔ Internet estable · ✔ Luz conectada.</p>`},
+ p8:{n:'8',title:'Tené otra pantalla',html:`
+  <p>Usá una computadora, tablet u otro celular <b>solo para leer el chat</b>. Es muchísimo más cómodo que hacerlo desde el mismo celular que transmite.</p>
+  <p style="margin-top:8px;color:var(--gray)">👉 Esta recomendación la tenés explicada en detalle más arriba, en esta misma sección.</p>`},
+ p9:{n:'9',title:'Prepará los productos antes',html:`
+  <p>No pierdas tiempo buscando cosas en vivo. Cada pausa para ir a buscar algo hace que la gente se vaya.</p>
+  <p style="margin-top:8px">Ordenalos · Numeralos · Prepará los precios de antemano. Tené todo a mano.</p>`},
+ p10:{n:'10',title:'Tené agua a mano',html:`
+  <p>Vas a hablar mucho, durante mucho tiempo. Parece un detalle menor, pero cambia muchísimo tu energía y tu voz.</p>`},
+ p11:{n:'11',title:'Mirá la cámara, no la pantalla',html:`
+  <p>Cuando mirás la cámara, la gente siente que <b>le hablás directamente a ella</b>. Eso conecta mucho más que mirar tu propia imagen.</p>`},
+ p12:{n:'12',title:'Cambiá de producto cada pocos minutos',html:`
+  <p>No estés 15 minutos con un mismo producto. TikTok favorece los cambios y la gente que va entrando se engancha con lo nuevo.</p>`},
+ p13:{n:'13',title:'Repetí la información importante',html:`
+  <p>Siempre entra gente nueva al live, y no escuchó lo que dijiste hace 5 minutos. Repetí lo clave sin miedo:</p>
+  <p style="margin-top:8px">• Precio · • Promoción · • Envíos · • Horarios.</p>`},
+ p14:{n:'14',title:'No esperes tener 100 personas',html:`
+  <p>Empezá con las que entren, sean 2 o 5. Muchos abandonan porque hay poca gente al principio — <b>ese es el error</b>. El algoritmo recién está arrancando.</p>`},
+ p15:{n:'15',title:'La primera hora vale oro',html:`
+  <p>TikTok necesita datos para saber a quién mostrarte. Mientras más y mejor transmitís en esa primera etapa, <b>más aprende el algoritmo</b> y más te impulsa.</p>`},
+ p16:{n:'16',title:'Los primeros 5 segundos son todo',html:`
+  <p>Arrancá fuerte. Nunca empieces dudando.</p>
+  <div class="idea-dd idea-no">❌ "Bueno... eh... hola..."</div>
+  <div class="idea-dd idea-si">✅ "Hoy tenemos un descuento que dura solamente durante este LIVE."</div>`},
+ p17:{n:'17',title:'La iluminación vende',html:`
+  <p>Un aro de luz bien usado puede hacer que un producto parezca de <b>mucha mayor calidad</b>. La primera impresión es visual: si se ve bien, se vende mejor.</p>`},
+ p18:{n:'18',title:'No mires el contador de espectadores',html:`
+  <p>Concentrate en vender, no en el número. Muchos lives pasan de 5 personas a más de 100 después de varios minutos. Si te frenás por el contador, nunca llegás a ese punto.</p>`},
+ p19:{n:'19',title:'Terminá con un anuncio',html:`
+  <p>Nunca cierres con un "bueno, chau". El final es para <b>generar expectativa</b> y que vuelvan.</p>
+  <div class="idea-dd idea-no">❌ "Bueno, chau, nos vemos."</div>
+  <div class="idea-dd idea-si">✅ "Mañana volvemos a las 20:00 con nuevos productos."</div>`},
+ p20:{n:'20',title:'La regla más importante del Live Commerce',html:`
+  <div class="lbl">La regla de oro</div><p><b>No vendas productos. Contá historias.</b></p>
+  <div class="idea-dd idea-no">❌ "Esta máquina corta muy bien."</div>
+  <div class="idea-dd idea-si">✅ "La semana pasada un cliente vino buscando una máquina para su barbería. Probó esta y en cinco minutos ya sabía que era la indicada."</div>
+  <p style="margin-top:12px">Las historias generan conexión, retención y confianza. Las características técnicas, por sí solas, rara vez venden tanto como una buena demostración o un caso real.</p>`}
+};
+function openPro(k){var d=PRO[k];if(!d)return;
+  document.getElementById('ideaEmo').textContent=d.n;
+  document.getElementById('ideaTitle').textContent=d.title;
+  document.getElementById('ideaBody').innerHTML=d.html;
+  var m=document.getElementById('ideaModal');m.classList.add('show');
+  var s=m.querySelector('.idea-sheet');if(s)s.scrollTop=0;
+  document.body.style.overflow='hidden';
+}
+
+/* ── Crear tu Cuenta (pasos cliqueables) ── */
+const WALINK_MOCK=`
+  <div style="background:linear-gradient(160deg,#f4f4f6,#e9e9ef);border-radius:16px;padding:14px;margin-top:6px;color:#1a1a22">
+    <div style="text-align:center;font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:17px;margin-bottom:12px;color:#15111c">Crea tu link gratis aquí</div>
+    <div style="background:#fff;border-radius:12px;padding:12px 12px 14px;box-shadow:0 4px 14px rgba(0,0,0,.08)">
+      <div style="font-size:12px;font-weight:700;color:#333;margin-bottom:5px">Escribí tu número de WhatsApp</div>
+      <div style="display:flex;align-items:center;gap:8px;background:#eef0f2;border-radius:8px;padding:9px 11px;margin-bottom:12px"><span style="font-size:15px">🇦🇷</span><span style="font-weight:700;color:#111;font-size:14px">+54 261 419-6629</span></div>
+      <div style="font-size:12px;font-weight:700;color:#333;margin-bottom:5px">Saludo del usuario</div>
+      <div style="border:2px solid #111;border-radius:8px;padding:10px;font-size:13px;color:#222;line-height:1.35;margin-bottom:12px">Hola, me comunico con <b>Magency.ar</b>, me gustaría contratar el servicio de marketing.</div>
+      <div style="background:#22a15a;color:#fff;text-align:center;font-weight:800;font-size:14px;padding:11px;border-radius:24px">Generar mi wa.link 😄</div>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;margin-top:12px;background:#fff;border-radius:12px;padding:10px;box-shadow:0 4px 14px rgba(0,0,0,.08)">
+      <div style="flex-shrink:0;font-size:11px;color:#555">Así lo verán tus usuarios ▸</div>
+      <div style="flex:1;background:#e5ddd5;border-radius:8px;padding:8px;min-height:52px;display:flex;align-items:flex-end;justify-content:flex-end">
+        <div style="background:#d9fdd3;border-radius:8px 8px 0 8px;padding:7px 9px;font-size:11px;color:#111;max-width:85%;line-height:1.3">Hola, me comunico con Magency.ar, me gustaría contratar el servicio de marketing.</div>
+      </div>
+    </div>
+  </div>`;
+const ACC={
+ a1:{n:'1',title:'📲 Descargar TikTok',html:`
+  <div class="lbl">Qué hacer</div><p>Bajá la app de TikTok desde la <b>App Store</b> (iPhone) o <b>Play Store</b> (Android). Es gratis.</p>
+  <div class="lbl">Tip</div><div class="idea-guion">💡 Descargala con WiFi para que baje rápido y se actualice sola a la última versión.</div>`},
+ a2:{n:'2',title:'📧 Crear con el mail del negocio',html:`
+  <div class="lbl">Qué hacer</div><p>No uses tu mail personal. Creá uno solo para el negocio, tipo <b>tunegocio@gmail.com</b>, para tener todo separado y ordenado.</p>
+  <div class="lbl">Por qué</div><p>Separar el negocio de lo personal te ahorra líos: notificaciones, recuperación de cuenta y ventas, todo en un lugar.</p>
+  <div class="lbl">Tip</div><div class="idea-guion">💡 Anotá usuario y contraseña en un lugar seguro.</div>`},
+ a3:{n:'3',title:'✨ Optimizar el perfil',html:`
+  <div class="lbl">Qué hacer</div><p>Dejá el perfil claro y profesional:</p>
+  <ol><li><b>Foto:</b> tu logo, 200x200 px, que se vea bien en chico.</li><li><b>Nombre:</b> simple y fácil de recordar.</li><li><b>Bio:</b> máximo 80 caracteres que digan <b>qué vendés y dónde</b>.</li></ol>
+  <div class="lbl">Ejemplo de bio</div><div class="idea-guion">"Ropa de mujer 👗 Envíos a todo el país 📦 Live los domingos 🔴"</div>`},
+ a4:{n:'4',title:'🔗 Link de WhatsApp en la bio',html:`
+  <div class="lbl">Qué es</div><p>Un <b>link directo a tu WhatsApp</b> para que quien te ve en TikTok te escriba en un toque, y con un <b>mensaje ya escrito</b>. Va en la bio de tu perfil.</p>
+  <div class="lbl">La forma fácil: generalo gratis</div><p>Usá <b>crear.wa.link</b>. Es gratis y te arma el link listo para copiar y pegar.</p>
+  <a class="btn btn-green" href="https://crear.wa.link/" target="_blank" style="display:inline-flex;margin:4px 0 2px">🔗 Generar mi wa.link gratis</a>
+  <div class="lbl">Cómo se hace</div><ol>
+   <li>Entrá a <b>crear.wa.link</b>.</li>
+   <li>Escribí el <b>número del negocio</b> donde te van a hablar los clientes, con código de país y área. Ej: <b>+54 261 419-6629</b>.</li>
+   <li>Escribí un <b>mensaje de saludo</b> que aparezca solo. Ej: <i>"Hola, me comunico con Magency.ar, me gustaría contratar el servicio de marketing."</i></li>
+   <li>Tocá <b>Generar mi wa.link</b> y copiá el link.</li>
+   <li>Pegá ese link en la <b>bio de TikTok</b>.</li>
+  </ol>
+  `+WALINK_MOCK+`
+  <div class="idea-guion" style="margin-top:10px">💡 ¿Sin generador? También funciona el clásico: <b>https://wa.me/549261XXXXXXX</b> (tu número con país y área, sin el "+" ni espacios).</div>
+  <p style="color:var(--gray);font-size:12px;margin-top:8px">La imagen de arriba es una representación de la herramienta crear.wa.link.</p>`},
+ a5:{n:'5',title:'🎥 Subir 3 videos antes del primer live',html:`
+  <div class="lbl">Qué hacer</div><p>Antes de tu primer LIVE, subí <b>3 videos cortos</b> mostrando productos. Así tu cuenta no aparece vacía y el algoritmo empieza a conocerte.</p>
+  <div class="lbl">Por qué</div><p>Una cuenta con contenido genera más confianza y le da a TikTok señales para mostrarte a más gente.</p>
+  <div class="lbl">Tip</div><div class="idea-guion">💡 No esperes que sean perfectos. <b>Hechos &gt; perfectos.</b></div>`}
+};
+function openAcc(k){var d=ACC[k];if(!d)return;
+  document.getElementById('ideaEmo').textContent=d.n;
+  document.getElementById('ideaTitle').textContent=d.title;
+  document.getElementById('ideaBody').innerHTML=d.html;
+  var m=document.getElementById('ideaModal');m.classList.add('show');
+  var s=m.querySelector('.idea-sheet');if(s)s.scrollTop=0;
+  document.body.style.overflow='hidden';
 }
 </script>
 </body>
